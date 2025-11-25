@@ -54,8 +54,8 @@ SPA (Single Page Application) reactiva y optimizada.
 
 2. Instalar dependencias
    ```bash
-       composer install
-       npm install
+   composer install
+   npm install
    
 3. Configurar entorno
     ```bash
