@@ -63,6 +63,7 @@ SPA (Single Page Application) reactiva y optimizada.
 
 4. Base de Datos
 - Asegúrate de tener el servicio de MySQL corriendo. Edita tu archivo .env:
+  
    ```bash
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
@@ -76,11 +77,14 @@ SPA (Single Page Application) reactiva y optimizada.
     php artisan migrate:fresh --seed
    
 6. Ejecutar
+   
 - Necesitas dos terminales:
   - Terminal 1
+    
        ```bash
         php artisan serve
    - Terminal 2
+     
         ```bash
         npm run dev
 
