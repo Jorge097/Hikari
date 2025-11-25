@@ -50,6 +50,7 @@ SPA (Single Page Application) reactiva y optimizada.
 1. Clona el repositorio:
    ```bash
     git clone https://github.com/Jorge097/Hikari.git
+   cd Hikari
 
 2. Instalar dependencias
    ```bash
