@@ -46,4 +46,52 @@ SPA (Single Page Application) reactiva y optimizada.
 - **ORM:** Eloquent (Manejo de modelos y relaciones).
 - **Gestión:** Migraciones y Seeders para control de versiones de esquema.
 
+## Instalación y Configuración
+1. Clona el repositorio:
+   ```bash
+    git clone [https://github.com/TU_USUARIO/Hikari.git](https://github.com/TU_USUARIO/Hikari.git)
+    cd Hikari
 
+2. Instalar dependencias
+   ```bash
+       composer install
+       npm install
+   
+3. Configurar entorno
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+
+4. Base de Datos
+- Asegúrate de tener el servicio de MySQL corriendo. Edita tu archivo .env:
+   ```bash
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=database_name
+   DB_USERNAME=root
+   DB_PASSWORD=password
+   
+5. Migraciones y Seeders
+   ```bash
+    php artisan migrate:fresh --seed
+   
+6. Ejecutar
+- Necesitas dos terminales:
+  - Terminal 1
+       ```bash
+        php artisan serve
+   - Terminal 2
+        ```bash
+        npm run dev
+
+7. Visita http://127.0.0.1:8000
+
+
+© 2025 Jorge Silva. Todos los derechos reservados.
+Este proyecto no puede ser usado, modificado ni vendido sin autorización del autor.
+
+Contacto
+
+Jorge Silva – jorge.silva-10@outlook.com
+Repositorio: https://github.com/Jorge097/Hikari
