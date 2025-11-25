@@ -20,7 +20,7 @@ Ofrecemos distintas colecciones: velas aromáticas, velas minimalistas, velas pa
 - **Stack Moderno:** Uso de Laravel Breeze + React para autenticación y frontend.
 - **Diseño Responsive:** Interfaz estilizada con Tailwind CSS, adaptada a móviles y escritorio.
 - **Base de Datos Relacional:** Estructura optimizada con MySQL.
-- 
+  
 ---
 
 ## Tecnologías
