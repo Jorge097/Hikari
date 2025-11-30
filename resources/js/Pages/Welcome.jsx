@@ -9,7 +9,7 @@ export default function Welcome({ auth, products }) {
                 
                 {/* --- NAVBAR --- */}
                 <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
-                    <div className="text-3xl font-bold text-orange-300">
+                    <div className="text-3xl font-bold text-[#000000]">
                         HIKARI
                     </div>
                     <div className="space-x-4 text-sm font-medium">
@@ -26,13 +26,10 @@ export default function Welcome({ auth, products }) {
                     </div>
                 </nav>
 
-                {/* --- Portada --- */}
-                <header className="relative bg-orange-100 rounded-3xl mx-4 overflow-hidden h-[500px] flex items-center justify-center text-center px-4">
+                {/* --- Header --- */}
+                <header className="relative bg-[#FFE5FC] rounded-3xl mx-4 overflow-hidden h-[500px] flex items-center justify-center text-center px-4">
                     {/* Nota: Luego pondremos una imagen de fondo real aquí */}
                     <div className="relative z-10 max-w-2xl">
-                        <span className="uppercase tracking-widest text-xs font-bold text-orange-600 mb-4 block">
-                            Colección Navidad 2025
-                        </span>
                         <h1 className="text-5xl md:text-7xl font-bold mb-6 text-neutral-900">
                             Ilumina tus momentos.
                         </h1>
