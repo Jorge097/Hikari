@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL; // <--- 1. IMPORTANTE: Agregar esta línea
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Vite::prefetch(concurrency: 3);
+        // CORRECCIÓN: Quitamos el ".app" para que detecte tu URL ".dev"
+        if (str_contains(request()->url(), 'ngrok')) {
+            URL::forceScheme('https');
+        }
     }
 }
