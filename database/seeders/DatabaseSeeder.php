@@ -60,7 +60,8 @@ class DatabaseSeeder extends Seeder
             'aroma' => 'Jengibre y Canela',
             'size' => '200g',
             'presentation' => 'Lata Dorada',
-            'is_seasonal' => true
+            'is_seasonal' => true,
+            'image' => 'images/velas/jengibre.jpg'
         ]);
 
         Product::create([
@@ -73,7 +74,8 @@ class DatabaseSeeder extends Seeder
             'aroma' => 'Lavanda Francesa',
             'size' => '150g',
             'presentation' => 'Frasco Transparente',
-            'is_seasonal' => false
+            'is_seasonal' => true,
+            'image' => ''
         ]);
     }
 }
