@@ -6,12 +6,30 @@ export default function Welcome({ auth, products }) {
             <Head title="Hikari - Velas Artesanales" />
 
             <div className="min-h-screen bg-neutral-50 text-neutral-800 font-sans">
-                
+
                 {/* --- NAVBAR --- */}
                 <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
-                    <div className="text-3xl font-bold text-[#000000]">
-                        HIKARI
-                    </div>
+
+                    {/* Parte Izquierda*/}
+                    <Link href="/" className="flex items-center gap-4 group">
+
+                        {/* Medidas del logo */}
+                        <div className="w-12 h-12 rounded-lg overflow-hidden">
+                            <img
+                                src="/images/vela.jpg"
+                                alt="Logo"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        {/* Medidas del texto */}
+                        <div className="text-3xl font-bold text-[#000000] tracking-tighter">
+                            HIKARI
+                        </div>
+                    </Link>
+
+
+                    {/* Parte Derecha */}
                     <div className="space-x-4 text-sm font-medium">
                         {auth?.user ? (
                             <Link href={route('dashboard')} className="hover:text-orange-600">Dashboard</Link>
@@ -55,9 +73,9 @@ export default function Welcome({ auth, products }) {
                             <div key={product.id} className="group cursor-pointer">
                                 <div className="aspect-[3/4] bg-gray-200 rounded-2xl overflow-hidden mb-4 relative">
                                     {/* Placeholder de imagen hasta que subamos fotos reales */}
-                                    <img 
-                                        src={`https://placehold.co/400x600/orange/white?text=${product.name}`} 
-                                        alt={product.name} 
+                                    <img
+                                        src={`https://placehold.co/400x600/orange/white?text=${product.name}`}
+                                        alt={product.name}
                                         className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                     />
                                     {product.is_seasonal && (
