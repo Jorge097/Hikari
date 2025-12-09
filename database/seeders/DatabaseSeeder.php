@@ -19,19 +19,19 @@ class DatabaseSeeder extends Seeder
         // 2. Crear Categorías
         $navidad = Category::create([
             'name' => 'Navidad 2025',
-            'slug' => 'navidad-2025',
+            'slug' => 'Navidad-2025',
             'is_active' => true
         ]);
 
         $halloween = Category::create([
             'name' => 'Halloween',
-            'slug' => 'halloween',
+            'slug' => 'Halloween',
             'is_active' => false 
         ]);
 
         $siempre = Category::create([
             'name' => 'Siempre',
-            'slug' => 'clasicas',
+            'slug' => 'Clasicas',
             'is_active' => true
         ]);
 
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
         Product::create([
             'category_id' => $eventos->id,
             'name' => 'Velas Para Bautizo',
-            'slug' => 'vela-lavanda-relax',
+            'slug' => 'vela-bautizo',
             'description' => 'Para momentos de una hermosa celebración.',
             'price' => 200.00,
             'stock' => 100,
@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder
             'size' => '100g',
             'presentation' => 'Frasco Transparente',
             'is_seasonal' => true,
-            'image' => 'images/velas/vela.jpg'
+            'image' => 'images/velas/vela_bautizo.jpg'
         ]);
     }
 }
