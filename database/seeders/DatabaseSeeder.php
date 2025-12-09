@@ -46,7 +46,8 @@ class DatabaseSeeder extends Seeder
             'aroma' => 'Pino y Roble',
             'size' => '300g',
             'presentation' => 'Frasco Vidrio Rojo',
-            'is_seasonal' => true
+            'is_seasonal' => true,
+            'image' => 'images/velas/vela_pino.jpg'
         ]);
 
         Product::create([

@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->string('presentation')->nullable(); 
 
             $table->boolean('is_seasonal')->default(false); // Es de la temporada? Si/No
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

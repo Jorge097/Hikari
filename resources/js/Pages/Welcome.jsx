@@ -1,6 +1,15 @@
 import { Link, Head } from '@inertiajs/react';
 
 export default function Welcome({ auth, products }) {
+
+    // Definimos las categorías aquí para que el código HTML quede limpio
+    const categories = [
+        { name: "Temporadas", color: "bg-orange-100" },
+        { name: "Eventos", color: "bg-blue-100" },
+        { name: "Sencillos", color: "bg-green-100" },
+        { name: "Clásicos", color: "bg-gray-100" },
+    ];
+
     return (
         <>
             <Head title="Hikari - Velas Artesanales" />
@@ -60,21 +69,45 @@ export default function Welcome({ auth, products }) {
                     </div>
                 </header>
 
-                {/* --- SECCIÓN DE PRODUCTOS DESTACADOS --- */}
+                {/* --- SECCIÓN DE CATEGORIAS --- */}
                 <section className="py-20 max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-end mb-12">
-                        <h2 className="text-3xl font-bold">Favoritos de la Temporada</h2>
+                        <h2 className="text-3xl font-bold">Categorias</h2>
+                    </div>
+
+                    {/* Categorias*/}
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {categories.map((cat, index) => (
+                            <Link
+                                key={index}
+                                href="#"
+                                className={`${cat.color} h-96 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-2 hover:shadow-lg transition duration-300 cursor-pointer group`}
+                            >
+                                <span className="text-6xl group-hover:scale-110 transition duration-300">{cat.icon}</span>
+                                <span className="font-bold text-neutral-800">{cat.name}</span>
+                            </Link>
+                        ))}
+                    </div>
+
+                </section>
+
+                {/* --- SECCIÓN DE pRODUCTOS DESTACADOS --- */}
+                <section className="py-20 max-w-7xl mx-auto px-6">
+                    <div className="flex justify-between items-end mb-12">
+                        <h2 className="text-3xl font-bold">Productos Destacados</h2>
                         <a href="#" className="text-orange-600 font-medium hover:underline">Ver todo &rarr;</a>
                     </div>
 
-                    {/* GRID DE PRODUCTOS */}
+                    {/* PRODUCTOS*/}
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {products.map((product) => (
                             <div key={product.id} className="group cursor-pointer">
                                 <div className="aspect-[3/4] bg-gray-200 rounded-2xl overflow-hidden mb-4 relative">
                                     {/* Placeholder de imagen hasta que subamos fotos reales */}
                                     <img
-                                        src={`https://placehold.co/400x600/orange/white?text=${product.name}`}
+                                        src={`/${product.image}`}
                                         alt={product.name}
                                         className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                     />
