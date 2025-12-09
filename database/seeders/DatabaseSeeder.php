@@ -35,6 +35,12 @@ class DatabaseSeeder extends Seeder
             'is_active' => true
         ]);
 
+        $eventos = Category::create([
+            'name' => 'Eventos',
+            'slug' => 'Eventos',
+            'is_active' => true
+        ]);
+
         // 3. Crear Productos (Velas)
         Product::create([
             'category_id' => $navidad->id,
@@ -75,7 +81,21 @@ class DatabaseSeeder extends Seeder
             'size' => '150g',
             'presentation' => 'Frasco Transparente',
             'is_seasonal' => true,
-            'image' => ''
+            'image' => 'images/velas/vela.jpg'
+        ]);
+
+        Product::create([
+            'category_id' => $eventos->id,
+            'name' => 'Velas Para Bautizo',
+            'slug' => 'vela-lavanda-relax',
+            'description' => 'Para momentos de una hermosa celebración.',
+            'price' => 200.00,
+            'stock' => 100,
+            'aroma' => 'Variedad',
+            'size' => '100g',
+            'presentation' => 'Frasco Transparente',
+            'is_seasonal' => true,
+            'image' => 'images/velas/vela.jpg'
         ]);
     }
 }
