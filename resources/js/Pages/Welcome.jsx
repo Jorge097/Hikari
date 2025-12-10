@@ -25,7 +25,7 @@ export default function Welcome({ auth, products }) {
                         {/* Medidas del logo */}
                         <div className="w-12 h-12 rounded-lg overflow-hidden">
                             <img
-                                src="/images/logo.jpg"
+                                src="/images/logo.png"
                                 alt="Logo"
                                 className="w-full h-full object-cover"
                             />
