@@ -4,10 +4,26 @@ export default function Welcome({ auth, products }) {
 
     // Definimos las categorías aquí para que el código HTML quede limpio
     const categories = [
-        { name: "Temporadas", color: "bg-orange-100" },
-        { name: "Eventos", color: "bg-blue-100" },
-        { name: "Sencillos", color: "bg-green-100" },
-        { name: "Clásicos", color: "bg-gray-100" },
+        { 
+            name: "Temporadas", 
+            color: "bg-orange-100", 
+            image: "/images/velas/vela_pino.jpg"
+        },
+        { 
+            name: "Eventos",    
+            color: "bg-blue-100",   
+            image: "/images/velas/jengibre.jpg"
+        },
+        { 
+            name: "Sencillos",  
+            color: "bg-green-100",  
+            image: "/images/velas/vela.jpg"
+        },
+        { 
+            name: "Clásicos",   
+            color: "bg-gray-100",   
+            image: "/images/velas/vela.jpg"
+        },
     ];
 
     return (
@@ -70,26 +86,49 @@ export default function Welcome({ auth, products }) {
                 </header>
 
                 {/* --- SECCIÓN DE CATEGORIAS --- */}
-                <section className="py-20 max-w-7xl mx-auto px-6">
-                    <div className="flex justify-between items-end mb-12">
-                        <h2 className="text-3xl font-bold">Categorias</h2>
-                    </div>
-
-                    {/* Categorias*/}
-
+                <section className="py-16 max-w-7xl mx-auto px-6">
+                    <h2 className="text-3xl font-bold mb-10 text-center">Explora nuestras Colecciones</h2>
+                    
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {categories.map((cat, index) => (
-                            <Link
-                                key={index}
-                                href="#"
-                                className={`${cat.color} h-96 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-2 hover:shadow-lg transition duration-300 cursor-pointer group`}
+                            <Link 
+                                key={index} 
+                                href="#" 
+                                className={`
+                                    ${cat.color} 
+                                    h-96 rounded-3xl relative overflow-hidden group cursor-pointer shadow-sm
+                                    flex flex-col transition-all duration-500
+                                    /* Por defecto centrado, al hover se va al final (abajo) */
+                                    justify-center hover:justify-end
+                                `}
                             >
-                                <span className="text-6xl group-hover:scale-110 transition duration-300">{cat.icon}</span>
-                                <span className="font-bold text-neutral-800">{cat.name}</span>
+                                {/* 1. IMAGEN DE FONDO (Oculta al principio) */}
+                                <div className="absolute inset-0 w-full h-full bg-black/10 z-0">
+                                    <img 
+                                        src={cat.image} 
+                                        alt={cat.name}
+                                        className="w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out"
+                                    />
+                                    {/* Capa oscura suave para que el texto se lea sobre la foto */}
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                </div>
+
+                                {/* 2. CONTENIDO (Icono y Texto) */}
+                                <div className="relative z-10 p-6 text-center transition-all duration-500 group-hover:translate-y-0">
+                                    
+                                    {/* El icono desaparece suavemente al hacer hover para dar espacio */}
+                                    <div className="text-5xl mb-2 group-hover:opacity-0 group-hover:hidden transition-opacity duration-300">
+                                        {cat.icon}
+                                    </div>
+
+                                    {/* El texto cambia de color: oscuro normal, blanco sobre la foto */}
+                                    <span className="font-bold text-xl text-neutral-800 group-hover:text-white group-hover:text-2xl transition-all duration-300">
+                                        {cat.name}
+                                    </span>
+                                </div>
                             </Link>
                         ))}
                     </div>
-
                 </section>
 
                 {/* --- SECCIÓN DE pRODUCTOS DESTACADOS --- */}
