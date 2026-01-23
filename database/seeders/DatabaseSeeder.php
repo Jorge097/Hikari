@@ -97,5 +97,19 @@ class DatabaseSeeder extends Seeder
             'is_seasonal' => true,
             'image' => 'images/velas/vela_bautizo.jpg'
         ]);
+
+        Product::create([
+            'category_id' => $halloween->id,
+            'name' => 'Draculas',
+            'slug' => 'vela-dracula',
+            'description' => 'Dulce aroma a lavanda',
+            'price' => 280.50,
+            'stock' => 20,
+            'aroma' => 'Lavanda',
+            'size' => '200g',
+            'presentation' => 'Lata Dorada',
+            'is_seasonal' => false,
+            'image' => 'images/velas/jengibre.jpg'
+        ]);
     }
 }

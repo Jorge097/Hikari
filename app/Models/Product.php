@@ -10,18 +10,27 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category_id', 'name', 'slug', 'description', 
-        'price', 'stock', 'aroma', 'size', 
-        'presentation', 'is_seasonal'
+        'category_id',
+        'name',
+        'slug',
+        'description',
+        'price',
+        'stock',
+        'aroma',
+        'size',
+        'presentation',
+        'is_seasonal',
+        'is_active',
+        'image', 
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-    
+
     // Un producto puede estar en muchos items de ordenes
-    public function orderItems() 
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }

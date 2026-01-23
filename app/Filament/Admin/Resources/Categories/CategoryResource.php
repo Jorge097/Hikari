@@ -36,6 +36,7 @@ class CategoryResource extends Resource
     {
         return [
             //
+            RelationManagers\ProductsRelationManager::class,
         ];
     }
 
