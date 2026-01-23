@@ -1,33 +1,38 @@
 import { Link, Head } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 
-/* --- CARRUSEL --- */
-function CategoryCard({ category }) {
+/* --- CARRUSEL DINÁMICO (CATEGORY CARD) --- */
+function CategoryCard({ category, colorClass }) {
+    // 1. Extraemos las imágenes de los productos de esta categoría
+    // Si la categoría no tiene productos con foto, usamos una por defecto.
+    const images = category.products && category.products.length > 0 
+        ? category.products.map(p => `/storage/${p.image}`) 
+        : ["/images/default-placeholder.jpg"]; 
+
     const [currentImage, setCurrentImage] = useState(0);
 
+    // 2. Lógica del Slideshow
     useEffect(() => {
-        if (category.images.length <= 1) return;
-
+        if (images.length <= 1) return;
         const timer = setInterval(() => {
-            setCurrentImage((prev) => (prev + 1) % category.images.length);
-        }, 2500); // 2.5 segundos
-
+            setCurrentImage((prev) => (prev + 1) % images.length);
+        }, 2500); // Cambio cada 2.5 segundos
         return () => clearInterval(timer);
-    }, [category.images]);
+    }, [images]);
 
     return (
         <Link
-            href="#"
+            href="#" // A futuro: route('categories.show', category.slug)
             className={`
-                ${category.color} 
+                ${colorClass} 
                 h-96 rounded-3xl relative overflow-hidden group cursor-pointer shadow-sm
                 flex flex-col transition-all duration-500
                 justify-center hover:justify-end
             `}
         >
-            {/* --- FONDO CON IMÁGENES --- */}
+            {/* --- FONDO (CARRUSEL DE IMÁGENES) --- */}
             <div className="absolute inset-0 w-full h-full bg-black/10 z-0">
-                {category.images.map((img, index) => (
+                {images.map((img, index) => (
                     <img
                         key={index}
                         src={img}
@@ -38,16 +43,16 @@ function CategoryCard({ category }) {
                             opacity-0 
                             ${index === currentImage ? 'group-hover:opacity-100' : ''}
                         `}
+                        // Si falla la carga de imagen (ej. borraste la foto de la carpeta)
+                        onError={(e) => { e.target.style.display = 'none'; }} 
                     />
                 ))}
-
+                {/* Capa oscura para leer el texto mejor al hacer hover */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
 
+            {/* --- TEXTO (SIN EMOJIS) --- */}
             <div className="relative z-10 p-6 text-center transition-all duration-500 group-hover:translate-y-0">
-                <div className="text-5xl mb-2 group-hover:opacity-0 group-hover:hidden transition-opacity duration-300">
-                    {category.icon}
-                </div>
                 <span className="font-bold text-xl text-neutral-800 group-hover:text-white group-hover:text-2xl transition-all duration-300">
                     {category.name}
                 </span>
@@ -56,44 +61,13 @@ function CategoryCard({ category }) {
     );
 }
 
-export default function Welcome({ auth, products }) {
+/* --- COMPONENTE PRINCIPAL WELCOME --- */
+export default function Welcome({ auth, products, categories }) {
 
-    /* --- DATOS DE CATEGORIAS --- */
-    const categories = [
-        {
-            name: "Temporadas",
-            color: "bg-orange-100",
-            images: [
-                "/images/velas/vela_pino.jpg",
-                "/images/velas/jengibre.jpg",
-                "/images/velas/vela_navidad.jpg",
-                "/images/velas/vela_navidad2.jpg"
-            ],
-        },
-        {
-            name: "Eventos",
-            color: "bg-blue-100",
-            images: [
-                "/images/velas/vela_bautizo.jpg",
-                "/images/velas/vela_evento.jpg"
-            ],
-        },
-        {
-            name: "Sencillos",
-            color: "bg-green-100",
-            images: [
-                "/images/velas/vela_clasica.jpg",
-                "/images/velas/vela_clasica2.jpg"
-            ],
-        },
-        {
-            name: "Clásicos",
-            color: "bg-gray-100",
-            images: [
-                "/images/velas/vela_pino.jpg",
-                "/images/velas/vela.jpg"
-            ],
-        },
+    // Paleta de colores para asignar cíclicamente a las categorías
+    const cardColors = [
+        "bg-red-100", "bg-blue-100", "bg-green-100", "bg-yellow-100",
+        "bg-purple-100", "bg-pink-100", "bg-orange-100", "bg-gray-200"
     ];
 
     return (
@@ -129,7 +103,7 @@ export default function Welcome({ auth, products }) {
                     </div>
                 </nav>
 
-                {/* --- HEADER --- */}
+                {/* --- HEADER (HERO) --- */}
                 <header className="relative bg-[#FFE5FC] rounded-3xl mx-4 overflow-hidden h-[500px] flex items-center justify-center text-center px-4">
                     <div className="relative z-10 max-w-2xl">
                         <h1 className="text-5xl md:text-7xl font-bold mb-6 text-neutral-900">
@@ -144,18 +118,23 @@ export default function Welcome({ auth, products }) {
                     </div>
                 </header>
 
-                {/* --- SECCIÓN DE CATEGORIAS--- */}
+                {/* --- SECCIÓN DE CATEGORIAS DINÁMICA --- */}
                 <section className="py-16 max-w-7xl mx-auto px-6">
-                    <h2 className="text-3xl font-bold mb-10 text-center">Explora nuestras Colecciones</h2>
+                    <h2 className="text-3xl font-bold mb-10 text-center">Explora nuestras Categorías</h2>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {/* Iteramos sobre las categorías que manda Laravel */}
                         {categories.map((cat, index) => (
-                            <CategoryCard key={index} category={cat} />
+                            <CategoryCard 
+                                key={cat.id} 
+                                category={cat} 
+                                colorClass={cardColors[index % cardColors.length]} 
+                            />
                         ))}
                     </div>
                 </section>
 
-                {/* --- PRODUCTOS --- */}
+                {/* --- PRODUCTOS DESTACADOS --- */}
                 <section className="py-20 max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-end mb-12">
                         <h2 className="text-3xl font-bold">Productos Destacados</h2>
@@ -167,7 +146,7 @@ export default function Welcome({ auth, products }) {
                             <div key={product.id} className="group cursor-pointer">
                                 <div className="aspect-[3/4] bg-gray-200 rounded-2xl overflow-hidden mb-4 relative">
                                     <img
-                                        src={`/${product.image}`}
+                                        src={`/storage/${product.image}`} // Corregido: Agregado /storage/
                                         alt={product.name}
                                         className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                         onError={(e) => { e.target.src = "https://placehold.co/400x600/orange/white?text=Sin+Foto" }}
