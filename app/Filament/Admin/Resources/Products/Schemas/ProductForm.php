@@ -16,19 +16,23 @@ class ProductForm
         return $schema
             ->components([
                 Select::make('category_id')
-                    ->relationship('category', 'name') 
+                    ->relationship('category', 'name')
                     ->label('Categoría')
                     ->searchable()
                     ->preload()
                     ->required(),
                 TextInput::make('name')
+                    ->label('Nombre')
                     ->required(),
                 TextInput::make('slug')
+                    ->label('Clave')
                     ->required(),
                 Textarea::make('description')
+                    ->label('Descripcion')
                     ->required()
                     ->columnSpanFull(),
                 TextInput::make('price')
+                    ->label('Precio')
                     ->required()
                     ->numeric()
                     ->prefix('$'),
@@ -36,15 +40,19 @@ class ProductForm
                     ->required()
                     ->numeric(),
                 TextInput::make('aroma'),
-                TextInput::make('size'),
-                TextInput::make('presentation'),
+                TextInput::make('size')
+                    ->label('Tamaño'),
+                TextInput::make('presentation')
+                    ->label('Presentación'),
                 Toggle::make('is_seasonal')
+                    ->label('Activo')
                     ->required(),
                 FileUpload::make('image')
+                    ->label('Imagen')
                     ->image()
-                    ->disk('public') 
-                    ->directory('products') 
-                    ->visibility('public') 
+                    ->disk('public')
+                    ->directory('products')
+                    ->visibility('public')
                     ->required(),
             ]);
     }
