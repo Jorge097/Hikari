@@ -23,10 +23,13 @@ class ProductsTable
                     ->color('info')
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label('Nombre')
                     ->searchable(),
                 TextColumn::make('slug')
+                    ->label('Clave')
                     ->searchable(),
                 TextColumn::make('price')
+                    ->label('Precio')
                     ->money()
                     ->sortable(),
                 TextColumn::make('stock')
@@ -35,12 +38,16 @@ class ProductsTable
                 TextColumn::make('aroma')
                     ->searchable(),
                 TextColumn::make('size')
+                    ->label('Tamaño')
                     ->searchable(),
                 TextColumn::make('presentation')
+                    ->label('Presentacion')
                     ->searchable(),
                 IconColumn::make('is_seasonal')
+                    ->label('Activo')
                     ->boolean(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->label('Imagen'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
