@@ -1,135 +1,107 @@
-import { Link, Head } from '@inertiajs/react';
 import React, { useState } from 'react';
+import { Head, Link } from '@inertiajs/react';
+import Navbar from '@/Components/Navbar'; 
 
 export default function ProductDetail({ auth, product, relatedProducts }) {
-    // Cantidad de velas que quiere comprar
+    
+    // Estado para la cantidad (Carrito en futuro)
     const [quantity, setQuantity] = useState(1);
-
-    const increment = () => setQuantity(prev => prev + 1);
-    const decrement = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
     return (
         <>
             <Head title={`${product.name} - Hikari`} />
-
-            <div className="min-h-screen bg-neutral-50 text-neutral-800 font-sans">
+            
+            <div className="min-h-screen bg-neutral-50 font-sans pb-20">
                 
-                {/* --- NAVBAR  --- */}
-                <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
-                    <Link href="/" className="flex items-center gap-4 group">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden">
-                            <img src="/images/Logo.png" alt="Logo" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="text-3xl font-bold text-[#000000] tracking-tighter">HIKARI</div>
-                    </Link>
-                    <div className="space-x-4 text-sm font-medium">
-                        {auth?.user ? (
-                            <Link href={route('dashboard')} className="hover:text-orange-600">Dashboard</Link>
-                        ) : (
-                            <>
-                                <Link href={route('login')} className="hover:text-orange-600">Iniciar Sesión</Link>
-                                <Link href={route('register')} className="px-4 py-2 bg-neutral-900 text-white rounded-full hover:bg-orange-600 transition">Registrarse</Link>
-                            </>
-                        )}
-                    </div>
-                </nav>
+                {/* 1. NAVBAR */}
+                <Navbar auth={auth} />
 
-                {/* --- DETALLE DEL PRODUCTO --- */}
-                <main className="max-w-7xl mx-auto px-6 py-12">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                <div className="max-w-7xl mx-auto px-6 mt-12">
+                    
+                    {/* --- SECCIÓN PRINCIPAL DEL PRODUCTO --- */}
+                    <div className="flex flex-col md:flex-row gap-12 bg-white p-8 rounded-3xl shadow-sm">
                         
-                        {/* COLUMNA IZQUIERDA: FOTO */}
-                        <div className="bg-white p-4 rounded-3xl shadow-sm overflow-hidden aspect-square relative">
-                            <img 
-                                src={`/storage/${product.image}`} 
-                                alt={product.name}
-                                className="w-full h-full object-cover rounded-2xl hover:scale-105 transition duration-700"
-                                onError={(e) => { e.target.src = "https://placehold.co/600x600/orange/white?text=Sin+Foto" }}
-                            />
-                        </div>
-
-                        {/* COLUMNA DERECHA: INFORMACIÓN */}
-                        <div className="space-y-8">
-                            <div>
-                                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-neutral-900">{product.name}</h1>
-                                <p className="text-3xl font-medium text-orange-600">${product.price}</p>
-                            </div>
-
-                            <p className="text-lg text-neutral-600 leading-relaxed">
-                                {product.description}
-                            </p>
-
-                            {/* Detalles */}
-                            <div className="grid grid-cols-2 gap-4 text-sm bg-white p-6 rounded-2xl border border-neutral-100">
-                                <div>
-                                    <span className="block text-neutral-400 mb-1">Aroma</span>
-                                    <span className="font-semibold text-lg">{product.aroma || 'N/A'}</span>
-                                </div>
-                                <div>
-                                    <span className="block text-neutral-400 mb-1">Tamaño</span>
-                                    <span className="font-semibold text-lg">{product.size || 'Estándar'}</span>
-                                </div>
-                                {product.presentation && (
-                                    <div className="col-span-2 mt-2">
-                                        <span className="block text-neutral-400 mb-1">Presentación</span>
-                                        <span className="font-semibold">{product.presentation}</span>
-                                    </div>
+                        {/* IMAGEN DEL PRODUCTO */}
+                        <div className="w-full md:w-1/2">
+                            <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100 relative">
+                                <img 
+                                    src={`/storage/${product.image}`} 
+                                    alt={product.name} 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.target.src = "https://placehold.co/600x600/orange/white?text=Sin+Foto" }}
+                                />
+                                {product.is_seasonal && (
+                                    <span className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
+                                        Edición Limitada
+                                    </span>
                                 )}
                             </div>
+                        </div>
 
-                            {/* Selector de Cantidad y Botón */}
-                            <div className="pt-6 border-t border-neutral-200">
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    {/* Contador */}
-                                    <div className="flex items-center bg-white border border-neutral-300 rounded-full w-max px-4 py-2">
-                                        <button onClick={decrement} className="text-xl px-3 hover:text-orange-600">-</button>
-                                        <span className="font-bold text-lg w-8 text-center">{quantity}</span>
-                                        <button onClick={increment} className="text-xl px-3 hover:text-orange-600">+</button>
-                                    </div>
+                        {/* DETALLES Y COMPRA */}
+                        <div className="w-full md:w-1/2 flex flex-col justify-center">
+                            <p className="text-sm text-orange-600 font-bold uppercase tracking-widest mb-2">
+                                {product.category?.name || 'Vela Artesanal'}
+                            </p>
+                            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+                                {product.name}
+                            </h1>
+                            <p className="text-3xl text-neutral-800 font-medium mb-6">
+                                ${product.price}
+                            </p>
+                            
+                            <div className="prose text-neutral-600 mb-8 leading-relaxed">
+                                <p>{product.description || "Una vela artesanal hecha con amor para iluminar tus espacios."}</p>
+                            </div>
 
-                                    {/* Botón de Acción */}
-                                    <button 
-                                        className="flex-1 bg-neutral-900 text-white text-lg font-bold py-3 px-8 rounded-full hover:bg-orange-600 transition shadow-lg transform active:scale-95"
-                                        onClick={() => alert(`Agregaste ${quantity} velas al carrito (Próximamente)`)}
-                                    >
-                                        Agregar al Pedido
-                                    </button>
+                            {/* Controles de Cantidad y Botón */}
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="flex items-center border border-gray-300 rounded-full px-4 py-2">
+                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="text-xl text-gray-500 px-2">-</button>
+                                    <span className="font-bold mx-2 w-4 text-center">{quantity}</span>
+                                    <button onClick={() => setQuantity(quantity + 1)} className="text-xl text-gray-500 px-2">+</button>
                                 </div>
-                                <p className="text-sm text-neutral-400 mt-4 text-center sm:text-left">
-                                    Stock disponible: {product.stock} unidades
-                                </p>
+                                <button className="flex-1 bg-neutral-900 text-white py-3 px-6 rounded-full font-bold hover:bg-orange-600 transition shadow-lg transform hover:-translate-y-1">
+                                    Añadir al Carrito
+                                </button>
+                            </div>
+
+                            <div className="text-xs text-gray-400 space-y-1">
+                                <p>✓ Envío disponible a todo México</p>
+                                <p>✓ Cera de soya 100% natural</p>
                             </div>
                         </div>
                     </div>
 
                     {/* --- PRODUCTOS RELACIONADOS --- */}
                     {relatedProducts.length > 0 && (
-                        <div className="mt-24">
-                            <h2 className="text-2xl font-bold mb-8">También te podría gustar</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                {relatedProducts.map((rel) => (
-                                    <Link key={rel.id} href={route('products.show', rel.slug)} className="group">
-                                        <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden mb-3">
+                        <div className="mt-20">
+                            <h2 className="text-2xl font-bold mb-8 text-neutral-900">También podría gustarte</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                                {relatedProducts.map((related) => (
+                                    <Link 
+                                        key={related.id} 
+                                        href={route('products.show', related.slug)}
+                                        className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
+                                    >
+                                        <div className="aspect-square bg-gray-100 overflow-hidden">
                                             <img 
-                                                src={`/storage/${rel.image}`} 
-                                                alt={rel.name}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                                                onError={(e) => { e.target.src = "https://placehold.co/400x600/orange/white?text=Sin+Foto" }}
+                                                src={`/storage/${related.image}`} 
+                                                alt={related.name} 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                             />
                                         </div>
-                                        <h3 className="font-semibold group-hover:text-orange-600 truncate">{rel.name}</h3>
-                                        <p className="text-neutral-500 text-sm">${rel.price}</p>
+                                        <div className="p-4">
+                                            <h3 className="font-bold text-neutral-900 group-hover:text-orange-600 truncate">{related.name}</h3>
+                                            <p className="text-neutral-600">${related.price}</p>
+                                        </div>
                                     </Link>
                                 ))}
                             </div>
                         </div>
                     )}
 
-                </main>
-
-                <footer className="bg-neutral-900 text-white py-12 text-center mt-12">
-                    <p className="text-neutral-500">&copy; 2025 Hikari Candles.</p>
-                </footer>
+                </div>
             </div>
         </>
     );
