@@ -1,11 +1,13 @@
 <?php
 
+
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
+use App\Http\Controllers\PublicController;
 
 /* PÁGINA DE INICIO (WELCOME) */
 Route::get('/', function () {
@@ -76,4 +78,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/categorias', function () {
+
+    $categories = Category::with('products')->where('is_active', true)->get();
+    return Inertia::render('Categorias', [
+        'categories' => $categories
+    ]);
+})->name('categorias');
+
+Route::get('/Velas', [PublicController::class, 'velas'])->name('velas');
+
+
 require __DIR__.'/auth.php';
+

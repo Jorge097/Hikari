@@ -1,12 +1,12 @@
 import { Link, Head } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
+import Navbar from '@/Components/Navbar'; 
 
-/* --- CARRUSEL DINÁMICO (CATEGORY CARD) --- */
+/* --- CARRUSEL DINÁMICO  --- */
 function CategoryCard({ category, colorClass }) {
-    // 1. Extraemos las imágenes de los productos de esta categoría
-    const images = category.products && category.products.length > 0 
-        ? category.products.map(p => `/storage/${p.image}`) 
-        : ["/images/default-placeholder.jpg"]; 
+    const images = category.products && category.products.length > 0
+        ? category.products.map(p => `/storage/${p.image}`)
+        : ["/images/default-placeholder.jpg"];
 
     const [currentImage, setCurrentImage] = useState(0);
 
@@ -15,13 +15,13 @@ function CategoryCard({ category, colorClass }) {
         if (images.length <= 1) return;
         const timer = setInterval(() => {
             setCurrentImage((prev) => (prev + 1) % images.length);
-        }, 2500); // Cambio cada 2.5 segundos
+        }, 2500); 
         return () => clearInterval(timer);
     }, [images]);
 
     return (
         <Link
-            href="#" // A futuro: route('categories.show', category.slug)
+            href={route('velas', { category: category.slug })}     
             className={`
                 ${colorClass} 
                 h-96 rounded-3xl relative overflow-hidden group cursor-pointer shadow-sm
@@ -42,7 +42,7 @@ function CategoryCard({ category, colorClass }) {
                             opacity-0 
                             ${index === currentImage ? 'group-hover:opacity-100' : ''}
                         `}
-                        onError={(e) => { e.target.style.display = 'none'; }} 
+                        onError={(e) => { e.target.style.display = 'none'; }}
                     />
                 ))}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -73,32 +73,10 @@ export default function Welcome({ auth, products, categories }) {
             <div className="min-h-screen bg-neutral-50 text-neutral-800 font-sans">
 
                 {/* --- NAVBAR --- */}
-                <nav className="flex justify-between items-center p-6 max-w-7xl mx-auto">
-                    <Link href="/" className="flex items-center gap-4 group">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden">
-                            <img src="/images/Logo.png" alt="Logo" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="text-3xl font-bold text-[#000000] tracking-tighter">
-                            HIKARI
-                        </div>
-                    </Link>
-
-                    <div className="space-x-4 text-sm font-medium">
-                        {auth?.user ? (
-                            <Link href={route('dashboard')} className="hover:text-orange-600">Dashboard</Link>
-                        ) : (
-                            <>
-                                <Link href={route('login')} className="hover:text-orange-600">Iniciar Sesión</Link>
-                                <Link href={route('register')} className="px-4 py-2 bg-neutral-900 text-white rounded-full hover:bg-orange-600 transition">
-                                    Registrarse
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                </nav>
+                <Navbar auth={auth} />
 
                 {/* --- HEADER --- */}
-                <header className="relative bg-[#FFE5FC] rounded-3xl mx-4 overflow-hidden h-[500px] flex items-center justify-center text-center px-4">
+                <header className="relative bg-[#FFE5FC] rounded-3xl mx-4 overflow-hidden h-[500px] flex items-center justify-center text-center px-4 mt-6">
                     <div className="relative z-10 max-w-2xl">
                         <h1 className="text-5xl md:text-7xl font-bold mb-6 text-neutral-900">
                             Ilumina tus momentos.
@@ -106,38 +84,38 @@ export default function Welcome({ auth, products, categories }) {
                         <p className="text-lg text-neutral-600 mb-8">
                             Velas artesanales con aromas que cuentan historias.
                         </p>
-                        <button className="bg-neutral-900 text-white px-8 py-4 rounded-full font-semibold hover:bg-orange-600 transition shadow-lg">
+                        <Link href={route('velas')} className="bg-neutral-900 text-white px-8 py-4 rounded-full font-semibold hover:bg-orange-600 transition shadow-lg">
                             Ver Catálogo
-                        </button>
+                        </Link>
                     </div>
                 </header>
 
                 {/* --- SECCIÓN DE CATEGORIAS --- */}
-                <section className="py-16 max-w-7xl mx-auto px-6">
+                <section id="categorias" className="py-16 max-w-7xl mx-auto px-6">
                     <h2 className="text-3xl font-bold mb-10 text-center">Explora nuestras Categorías</h2>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                         {categories.map((cat, index) => (
-                            <CategoryCard 
-                                key={cat.id} 
-                                category={cat} 
-                                colorClass={cardColors[index % cardColors.length]} 
+                            <CategoryCard
+                                key={cat.id}
+                                category={cat}
+                                colorClass={cardColors[index % cardColors.length]}
                             />
                         ))}
                     </div>
                 </section>
 
-                {/* --- PRODUCTOS DESTACADOS (CORREGIDO) --- */}
-                <section className="py-20 max-w-7xl mx-auto px-6">
+                {/* --- PRODUCTOS DESTACADOS --- */}
+                <section id="productos" className="py-20 max-w-7xl mx-auto px-6">
                     <div className="flex justify-between items-end mb-12">
                         <h2 className="text-3xl font-bold">Productos Destacados</h2>
-                        <a href="#" className="text-orange-600 font-medium hover:underline">Ver todo &rarr;</a>
+                        <Link href={route('velas')} className="text-orange-600 font-medium hover:underline">Ver todo &rarr;</Link>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {products.map((product) => (
-                            <Link 
-                                key={product.id} 
-                                href={route('products.show', product.slug)} 
+                            <Link
+                                key={product.id}
+                                href={route('products.show', product.slug)}
                                 className="group cursor-pointer block"
                             >
                                 <div className="aspect-[3/4] bg-gray-200 rounded-2xl overflow-hidden mb-4 relative">
