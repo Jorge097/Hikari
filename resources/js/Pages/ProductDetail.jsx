@@ -1,32 +1,37 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import Navbar from '@/Components/Navbar'; 
+import Navbar from '@/Components/Navbar';
+import { useCart } from '@/Hooks/useCart'; 4
 
 export default function ProductDetail({ auth, product, relatedProducts }) {
-    
-    // Estado para la cantidad (Carrito en futuro)
+
+    const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
+
+    const handleAddToCart = () => {
+        addToCart(product, quantity);
+    };
 
     return (
         <>
             <Head title={`${product.name} - Hikari`} />
-            
+
             <div className="min-h-screen bg-neutral-50 font-sans pb-20">
-                
+
                 {/* 1. NAVBAR */}
                 <Navbar auth={auth} />
 
                 <div className="max-w-7xl mx-auto px-6 mt-12">
-                    
+
                     {/* --- SECCIÓN PRINCIPAL DEL PRODUCTO --- */}
                     <div className="flex flex-col md:flex-row gap-12 bg-white p-8 rounded-3xl shadow-sm">
-                        
+
                         {/* IMAGEN DEL PRODUCTO */}
                         <div className="w-full md:w-1/2">
                             <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100 relative">
-                                <img 
-                                    src={`/storage/${product.image}`} 
-                                    alt={product.name} 
+                                <img
+                                    src={`/storage/${product.image}`}
+                                    alt={product.name}
                                     className="w-full h-full object-cover"
                                     onError={(e) => { e.target.src = "https://placehold.co/600x600/orange/white?text=Sin+Foto" }}
                                 />
@@ -49,7 +54,7 @@ export default function ProductDetail({ auth, product, relatedProducts }) {
                             <p className="text-3xl text-neutral-800 font-medium mb-6">
                                 ${product.price}
                             </p>
-                            
+
                             <div className="prose text-neutral-600 mb-8 leading-relaxed">
                                 <p>{product.description || "Una vela artesanal hecha con amor para iluminar tus espacios."}</p>
                             </div>
@@ -61,14 +66,11 @@ export default function ProductDetail({ auth, product, relatedProducts }) {
                                     <span className="font-bold mx-2 w-4 text-center">{quantity}</span>
                                     <button onClick={() => setQuantity(quantity + 1)} className="text-xl text-gray-500 px-2">+</button>
                                 </div>
-                                <button className="flex-1 bg-neutral-900 text-white py-3 px-6 rounded-full font-bold hover:bg-orange-600 transition shadow-lg transform hover:-translate-y-1">
+                                <button
+                                    onClick={handleAddToCart}
+                                    className="flex-1 bg-neutral-900 text-white py-3 px-6 rounded-full font-bold hover:bg-orange-600 transition shadow-lg">
                                     Añadir al Carrito
                                 </button>
-                            </div>
-
-                            <div className="text-xs text-gray-400 space-y-1">
-                                <p>✓ Envío disponible a todo México</p>
-                                <p>✓ Cera de soya 100% natural</p>
                             </div>
                         </div>
                     </div>
@@ -79,15 +81,15 @@ export default function ProductDetail({ auth, product, relatedProducts }) {
                             <h2 className="text-2xl font-bold mb-8 text-neutral-900">También podría gustarte</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                                 {relatedProducts.map((related) => (
-                                    <Link 
-                                        key={related.id} 
+                                    <Link
+                                        key={related.id}
                                         href={route('products.show', related.slug)}
                                         className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
                                     >
                                         <div className="aspect-square bg-gray-100 overflow-hidden">
-                                            <img 
-                                                src={`/storage/${related.image}`} 
-                                                alt={related.name} 
+                                            <img
+                                                src={`/storage/${related.image}`}
+                                                alt={related.name}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                             />
                                         </div>
@@ -102,7 +104,7 @@ export default function ProductDetail({ auth, product, relatedProducts }) {
                     )}
 
                 </div>
-            </div>
+            </div >
         </>
     );
 }
