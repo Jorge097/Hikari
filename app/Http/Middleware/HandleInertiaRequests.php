@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'all_products' => \App\Models\Product::where('is_active', true)->select('id', 'name', 'slug', 'image')->get(),
         ];
     }
 }

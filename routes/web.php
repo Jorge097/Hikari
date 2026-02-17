@@ -88,6 +88,8 @@ Route::get('/categorias', function () {
 
 Route::get('/Velas', [PublicController::class, 'velas'])->name('velas');
 
+Route::get('/pedido', function() { return Inertia::render('Cart'); })->name('cart');
+
 
 require __DIR__.'/auth.php';
 
