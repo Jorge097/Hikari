@@ -7,7 +7,7 @@ export default function Cart({ auth }) {
     const { cart, removeFromCart, cartTotal } = useCart();
 
     const sendWhatsApp = () => {
-    const phoneNumber = "528711122002"; // Número de WhatsApp de Hikari
+    const phoneNumber = "528717811541"; // Número de WhatsApp de Hikari
     
     if (cart.length === 0) return;
 
