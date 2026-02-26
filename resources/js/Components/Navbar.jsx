@@ -86,6 +86,7 @@ export default function Navbar({ auth }) {
                 <ul className="flex items-center space-x-6 text-sm font-semibold text-neutral-600">
                     <li className="hidden sm:block"><Link href="/" className="hover:text-orange-600">Inicio</Link></li>
                     <li className="hidden sm:block"><Link href={route('velas')} className="hover:text-orange-600">Velas</Link></li>
+                    <li className="hidden sm:block"><Link href={route('categorias')} className="hover:text-orange-600">Caategorias</Link></li>
                     <li><a href="#" className="hover:text-orange-600 transition-colors">¿Qué hacemos?</a></li>
                     <li><a href="#" className="hover:text-orange-600 transition-colors">¿Quiénes Somos?</a></li>
                     {auth?.user ? (
