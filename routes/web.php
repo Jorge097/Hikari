@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
 use App\Http\Controllers\PublicController;
+use App\Models\Scent;
+
 
 /* PÁGINA DE INICIO (WELCOME) */
 Route::get('/', function () {
@@ -15,19 +17,21 @@ Route::get('/', function () {
     $featuredProducts = Product::where('is_seasonal', true)
         ->where('is_active', true)
         ->whereHas('category', function ($query) {
-            $query->where('is_active', true); 
+            $query->where('is_active', true);
         })
         ->take(4)
         ->get();
 
     // Categorías activas para el carrusel
     $categories = Category::where('is_active', true)
-        ->with(['products' => function ($query) {
-            $query->where('is_active', true)
-                  ->whereNotNull('image')
-                  ->limit(4)
-                  ->select('id', 'category_id', 'image');
-        }])
+        ->with([
+            'products' => function ($query) {
+                $query->where('is_active', true)
+                    ->whereNotNull('image')
+                    ->limit(4)
+                    ->select('id', 'category_id', 'image');
+            }
+        ])
         ->get();
 
     return Inertia::render('Welcome', [
@@ -43,23 +47,27 @@ Route::get('/producto/{slug}', function ($slug) {
 
     $product = Product::where('slug', $slug)
         ->where('is_active', true)
+        ->with(['sizes', 'category'])
         ->whereHas('category', function ($query) {
-            $query->where('is_active', true); 
+            $query->where('is_active', true);
         })
         ->firstOrFail();
 
-    $relatedProducts = Product::where('id', '!=', $product->id) 
-        ->where('is_active', true) 
+    $relatedProducts = Product::where('id', '!=', $product->id)
+        ->where('is_active', true)
         ->whereHas('category', function ($query) {
-            $query->where('is_active', true); 
+            $query->where('is_active', true);
         })
-        ->inRandomOrder() 
+        ->inRandomOrder()
         ->take(4)
         ->get();
+
+    $scents = Scent::where('is_active', true)->get();
 
     return Inertia::render('ProductDetail', [
         'product' => $product,
         'relatedProducts' => $relatedProducts,
+        'scents' => $scents,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
@@ -88,8 +96,10 @@ Route::get('/categorias', function () {
 
 Route::get('/Velas', [PublicController::class, 'velas'])->name('velas');
 
-Route::get('/pedido', function() { return Inertia::render('Cart'); })->name('cart');
+Route::get('/pedido', function () {
+    return Inertia::render('Cart');
+})->name('cart');
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
