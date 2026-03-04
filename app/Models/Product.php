@@ -21,15 +21,26 @@ class Product extends Model
         'presentation',
         'is_seasonal',
         'is_active',
-        'image', 
+        'image',
     ];
+
+
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class)->withTimestamps();
+    }
+
+    public function isClassic()
+    {
+        return $this->category && $this->category->name === 'Clásicas';
+    }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    // Un producto puede estar en muchos items de ordenes
+    
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
