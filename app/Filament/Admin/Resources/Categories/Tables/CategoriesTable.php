@@ -30,6 +30,12 @@ class CategoriesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+
+
+            ->reorderable('sort')   
+            ->defaultSort('sort')
+
+
             ->filters([
                 //
             ])

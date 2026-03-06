@@ -19,13 +19,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->text('description');
             $table->decimal('price', 8, 2);
-            $table->integer('stock');
-
-            // Características específicas de las velas
-            $table->string('aroma')->nullable(); 
             $table->string('size')->nullable();  
-            $table->string('presentation')->nullable(); 
-
             $table->boolean('is_seasonal')->default(false); // Es de la temporada? Si/No
             $table->string('image')->nullable();
             $table->timestamps();

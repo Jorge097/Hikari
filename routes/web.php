@@ -1,17 +1,16 @@
 <?php
 
-
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
-use App\Http\Controllers\PublicController;
 use App\Models\Scent;
+use App\Models\Size;
+use App\Http\Controllers\PublicController;
 
+/* PÁGINA DE INICIO */
 
-/* PÁGINA DE INICIO (WELCOME) */
 Route::get('/', function () {
 
     $featuredProducts = Product::where('is_seasonal', true)
@@ -22,7 +21,6 @@ Route::get('/', function () {
         ->take(4)
         ->get();
 
-    // Categorías activas para el carrusel
     $categories = Category::where('is_active', true)
         ->with([
             'products' => function ($query) {
@@ -42,7 +40,9 @@ Route::get('/', function () {
     ]);
 });
 
+
 /* DETALLE DE PRODUCTO */
+
 Route::get('/producto/{slug}', function ($slug) {
 
     $product = Product::where('slug', $slug)
@@ -62,12 +62,20 @@ Route::get('/producto/{slug}', function ($slug) {
         ->take(4)
         ->get();
 
-    $scents = Scent::where('is_active', true)->get();
+    // Aromas activos
+    $scents = Scent::where('is_active', true)
+        ->orderBy('name')
+        ->get(['id','name']);
+
+    // Tamaños disponibles
+    $sizes = Size::orderBy('name')
+        ->get(['id','name','extra_price']);
 
     return Inertia::render('ProductDetail', [
         'product' => $product,
         'relatedProducts' => $relatedProducts,
         'scents' => $scents,
+        'sizes' => $sizes,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
@@ -75,26 +83,45 @@ Route::get('/producto/{slug}', function ($slug) {
 })->name('products.show');
 
 
-/* RUTAS DE USUARIO AUTENTICADO */
+/* USUARIO AUTENTICADO */
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
+
+
+/* CATEGORÍAS */
 
 Route::get('/categorias', function () {
 
-    $categories = Category::with('products')->where('is_active', true)->get();
+    $categories = Category::with('products')
+        ->where('is_active', true)
+        ->get();
+
     return Inertia::render('Categorias', [
         'categories' => $categories
     ]);
+
 })->name('categorias');
 
+
+/* CATÁLOGO */
+
 Route::get('/Velas', [PublicController::class, 'velas'])->name('velas');
+
+
+/* CARRITO*/
 
 Route::get('/pedido', function () {
     return Inertia::render('Cart');
@@ -102,4 +129,3 @@ Route::get('/pedido', function () {
 
 
 require __DIR__ . '/auth.php';
-

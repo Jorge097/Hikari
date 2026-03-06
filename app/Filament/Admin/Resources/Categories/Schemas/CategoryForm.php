@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Categories\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class CategoryForm
@@ -12,12 +13,20 @@ class CategoryForm
     {
         return $schema
             ->components([
+
                 TextInput::make('name')
                     ->required(),
+
                 TextInput::make('slug')
                     ->required(),
+
+                Textarea::make('description')
+                    ->label('Descripcion')
+                    ->columnSpanFull(),
+
                 Toggle::make('is_active')
                     ->required(),
+
             ]);
     }
 }

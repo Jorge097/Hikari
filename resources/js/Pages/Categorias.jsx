@@ -58,8 +58,6 @@ function CategoryCard({ category, colorClass }) {
 
 /* --- EL RESTO DEL ARCHIVO SIGUE IGUAL --- */
 function HeroSlider({ categories }) {
-    // ... (Tu código del slider que ya funcionaba bien)
-    // Aplanamos productos...
     const allProducts = categories.flatMap(cat =>
         cat.products.map(prod => ({ ...prod, categoryName: cat.name }))
     );

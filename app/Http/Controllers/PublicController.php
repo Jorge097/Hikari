@@ -14,14 +14,14 @@ class PublicController extends Controller
     {
         $query = Product::query()
             ->where('is_active', true)
-            ->with('category'); 
+            ->with('category');
 
         // Barra de búsqueda
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -34,12 +34,14 @@ class PublicController extends Controller
         }
 
         // Resultados paginados 
-        $products = $query->orderBy('created_at', 'desc')
-                          ->paginate(12)
-                          ->withQueryString();
+        $products = $query->orderBy('sort') // <- ('sort') para cambiar el orden en un futuro
+            ->paginate(12)
+            ->withQueryString();
 
         // Categorías para la lista lateral
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort')
+            ->get();
 
         return Inertia::render('Velas', [
             'products' => $products,
