@@ -22,6 +22,7 @@ class Product extends Model
         'is_seasonal',
         'is_active',
         'image',
+        'sort',
     ];
 
 

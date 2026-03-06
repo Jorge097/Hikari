@@ -32,16 +32,8 @@ class ProductsTable
                     ->label('Precio')
                     ->money()
                     ->sortable(),
-                TextColumn::make('stock')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('aroma')
-                    ->searchable(),
                 TextColumn::make('size')
                     ->label('Tamaño')
-                    ->searchable(),
-                TextColumn::make('presentation')
-                    ->label('Presentacion')
                     ->searchable(),
                 IconColumn::make('is_seasonal')
                     ->label('Activo')
@@ -56,7 +48,11 @@ class ProductsTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                    
             ])
+
+            ->reorderable('sort')
+            ->defaultSort('sort')
             ->filters([
                 //
             ])

@@ -36,14 +36,8 @@ class ProductForm
                     ->required()
                     ->numeric()
                     ->prefix('$'),
-                TextInput::make('stock')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('aroma'),
                 TextInput::make('size')
                     ->label('Tamaño'),
-                TextInput::make('presentation')
-                    ->label('Presentación'),
                 Toggle::make('is_seasonal')
                     ->label('Activo')
                     ->required(),

@@ -7,12 +7,13 @@ export default function VelasIndex({ auth, products, categories, filters }) {
     const { addToCart } = useCart();
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
     const activeCategoryName = categories.find(cat => cat.slug === filters.category)?.name;
+    const activeCategoryDescription = categories.find(cat => cat.slug === filters.category)?.description;
 
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get(route('velas'), { 
-            search: searchTerm, 
-            category: filters.category 
+        router.get(route('velas'), {
+            search: searchTerm,
+            category: filters.category
         }, { preserveState: true, replace: true });
     };
 
@@ -23,10 +24,18 @@ export default function VelasIndex({ auth, products, categories, filters }) {
                 <Navbar auth={auth} />
 
                 <div className="max-w-7xl mx-auto px-6 mt-10">
-                    <div className="mb-10 text-center">
+                    <div className="mb-10 text-center max-w-3xl mx-auto">
+
                         <h1 className="text-4xl font-bold text-neutral-900">
                             {activeCategoryName ? activeCategoryName : 'Nuestras Velas'}
                         </h1>
+
+                        {activeCategoryDescription && (
+                            <p className="mt-4 text-neutral-600 leading-relaxed">
+                                {activeCategoryDescription}
+                            </p>
+                        )}
+
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-10">
@@ -34,9 +43,9 @@ export default function VelasIndex({ auth, products, categories, filters }) {
                         <aside className="w-full md:w-1/4">
                             <form onSubmit={handleSearch} className="mb-8">
                                 <div className="relative">
-                                    <input 
-                                        type="text" 
-                                        placeholder="Buscar..." 
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar..."
                                         className="w-full border rounded-full py-3 px-5 focus:ring-2 focus:ring-orange-200"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -64,7 +73,7 @@ export default function VelasIndex({ auth, products, categories, filters }) {
                                 {products.data.map((product) => (
                                     <div key={product.id} className="group relative bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition">
                                         {/* Botón rápido "+" */}
-                                        <button 
+                                        <button
                                             onClick={() => addToCart(product, 1)}
                                             className="absolute top-3 right-3 z-20 bg-white/90 backdrop-blur-sm text-neutral-800 w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-orange-600 hover:text-white transition-all transform active:scale-95"
                                             title="Añadir rápido"
@@ -74,10 +83,10 @@ export default function VelasIndex({ auth, products, categories, filters }) {
 
                                         <Link href={route('products.show', product.slug)}>
                                             <div className="aspect-square relative overflow-hidden bg-gray-100">
-                                                <img 
-                                                    src={`/storage/${product.image}`} 
-                                                    alt={product.name} 
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-700" 
+                                                <img
+                                                    src={`/storage/${product.image}`}
+                                                    alt={product.name}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
                                                     onError={(e) => { e.target.src = "https://placehold.co/400x400/orange/white?text=Sin+Foto" }}
                                                 />
                                             </div>
