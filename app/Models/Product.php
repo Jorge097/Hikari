@@ -31,9 +31,9 @@ class Product extends Model
         return $this->belongsToMany(Size::class)->withTimestamps();
     }
 
-    public function isClassic()
+    public function isImperial()
     {
-        return $this->category && $this->category->name === 'Clásicas';
+        return $this->category && $this->category->name === 'IsImperial';
     }
 
     public function category()
