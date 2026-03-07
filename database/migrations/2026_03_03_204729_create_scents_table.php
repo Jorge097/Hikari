@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('scents', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Ejemplo: Lavanda, Vainilla, Canela
+            $table->string('name'); // Escencias
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

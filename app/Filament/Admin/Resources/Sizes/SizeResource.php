@@ -17,7 +17,6 @@ class SizeResource extends Resource
 {
     protected static ?string $model = Size::class;
 
-    // Icono de regla/medida adaptado a PHP 8.2
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrows-pointing-out';
 
     protected static ?string $recordTitleAttribute = 'name';

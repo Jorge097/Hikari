@@ -45,7 +45,7 @@ export default function VelasIndex({ auth, products, categories, filters }) {
                     <div className="flex flex-col md:flex-row gap-10">
 
                         {/* SIDEBAR */}
-                        <aside className="w-full md:w-1/4">
+                        <aside className="w-full md:w-1/4 md:sticky md:top-24 h-fit">
 
                             <form onSubmit={handleSearch} className="mb-8">
 
@@ -102,7 +102,7 @@ export default function VelasIndex({ auth, products, categories, filters }) {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                                {products.data.map((product) => (
+                                {products.map((product) => (
 
                                     <Link
                                         key={product.id}

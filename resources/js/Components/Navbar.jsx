@@ -51,7 +51,7 @@ export default function Navbar({ auth }) {
 
     return (
 
-        <nav className="relative bg-white border-b border-gray-100 z-50">
+        <nav className="sticky top-0 backdrop-blur bg-white/90 border-b border-gray-100 z-50">
 
             <div className="flex justify-between items-center p-6 max-w-7xl mx-auto">
 
@@ -114,11 +114,11 @@ export default function Navbar({ auth }) {
                     </li>
 
                     <li>
-                        <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
+                        <Link href={route('categorias')} className="hover:text-orange-600">Categorias</Link>
                     </li>
 
                     <li>
-                        <Link href={route('categorias')} className="hover:text-orange-600">Categorias</Link>
+                        <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
                     </li>
 
                     <li>
