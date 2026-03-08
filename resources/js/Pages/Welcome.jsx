@@ -1,6 +1,6 @@
 import { Link, Head } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/Components/Navbar'; 
+import Navbar from '@/Components/Navbar';
 
 /* --- CARRUSEL DINÁMICO  --- */
 function CategoryCard({ category, colorClass }) {
@@ -15,13 +15,13 @@ function CategoryCard({ category, colorClass }) {
         if (images.length <= 1) return;
         const timer = setInterval(() => {
             setCurrentImage((prev) => (prev + 1) % images.length);
-        }, 2500); 
+        }, 2500);
         return () => clearInterval(timer);
     }, [images]);
 
     return (
         <Link
-            href={route('velas', { category: category.slug })}     
+            href={route('velas', { category: category.slug })}
             className={`
                 ${colorClass} 
                 h-96 rounded-3xl relative overflow-hidden group cursor-pointer shadow-sm
@@ -82,7 +82,8 @@ export default function Welcome({ auth, products, categories }) {
                             Ilumina tus momentos.
                         </h1>
                         <p className="text-lg text-neutral-600 mb-8">
-                            Velas artesanales con aromas que cuentan historias.
+                            LA FRAGANCIA ES LA GARANTIA QUE NOS <br />
+                            DISTINGUE COMO LA MEJOR OPCION
                         </p>
                         <Link href={route('velas')} className="bg-neutral-900 text-white px-8 py-4 rounded-full font-semibold hover:bg-orange-600 transition shadow-lg">
                             Ver Catálogo
