@@ -22,6 +22,7 @@ class PublicController extends Controller
             ->whereHas('category', function ($query) {
                 $query->where('is_active', true);
             })
+            ->inRandomOrder()
             ->take(4)
             ->get();
 
@@ -154,6 +155,11 @@ class PublicController extends Controller
     public function dashboard()
     {
         return Inertia::render('Dashboard');
+    }
+
+    public function conocenos()
+    {   
+        return Inertia::render('Conocenos');
     }
 
 }

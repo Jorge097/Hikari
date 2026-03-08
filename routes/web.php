@@ -22,6 +22,9 @@ Route::controller(PublicController::class)->group(function () {
     Route::get('/pedido', 'cart')
         ->name('cart');
 
+    Route::get('/Conocenos', [PublicController::class, 'conocenos'])
+        ->name('conocenos');
+
 });
 
 
@@ -45,4 +48,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
-require __DIR__.'/auth.php';
+
+
+require __DIR__ . '/auth.php';

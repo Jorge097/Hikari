@@ -122,12 +122,9 @@ export default function Navbar({ auth }) {
                     </li>
 
                     <li>
-                        <a href="#" className="hover:text-orange-600">¿Qué hacemos?</a>
+                        <a href={route('conocenos')} className="hover:text-orange-600">Conocenos</a>
                     </li>
 
-                    <li>
-                        <a href="#" className="hover:text-orange-600">¿Quiénes somos?</a>
-                    </li>
 
                     <li>
 
