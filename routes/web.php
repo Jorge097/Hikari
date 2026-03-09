@@ -22,7 +22,7 @@ Route::controller(PublicController::class)->group(function () {
     Route::get('/pedido', 'cart')
         ->name('cart');
 
-    Route::get('/Conocenos', ['conocenos'])
+    Route::get('/Conocenos', [PublicController::class, 'conocenos'])
         ->name('conocenos');
 
 });
