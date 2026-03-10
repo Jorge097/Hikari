@@ -162,40 +162,37 @@ export default function Navbar({ auth }) {
                     <ul className="flex flex-col p-6 space-y-4 text-sm font-semibold text-neutral-700">
 
                         <li>
-                            <Link href="/" className="hover:text-orange-600">Inicio</Link>
-                        </li>
+                        <Link href="/" className="hover:text-orange-600">Inicio</Link>
+                    </li>
 
-                        <li>
-                            <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
-                        </li>
+                    <li>
+                        <Link href={route('categorias')} className="hover:text-orange-600">Categorias</Link>
+                    </li>
 
-                        <li>
-                            <Link href={route('categorias')} className="hover:text-orange-600">Categorias</Link>
-                        </li>
+                    <li>
+                        <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
+                    </li>
 
-                        <li>
-                            <a href="#" className="hover:text-orange-600">¿Qué hacemos?</a>
-                        </li>
+                    <li>
+                        <a href={route('conocenos')} className="hover:text-orange-600">Conocenos</a>
+                    </li>
 
-                        <li>
-                            <a href="#" className="hover:text-orange-600">¿Quiénes somos?</a>
-                        </li>
 
-                        <li>
+                    <li>
 
-                            <Link href={route('cart')} className="flex items-center gap-2">
+                        <Link href={route('cart')} className="relative p-2 hover:bg-gray-50 rounded-full transition">
 
-                                🛒 Carrito
+                            <span className="text-xl">🛒</span>
 
-                                {itemCount > 0 && (
-                                    <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
-                                        {itemCount}
-                                    </span>
-                                )}
+                            {itemCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">
+                                    {itemCount}
+                                </span>
+                            )}
 
-                            </Link>
+                        </Link>
 
-                        </li>
+                    </li>
 
                     </ul>
 

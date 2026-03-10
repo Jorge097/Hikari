@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
+import Footer from '@/Components/Footer';
 
 export default function VelasIndex({ auth, products, categories, filters }) {
 
@@ -151,6 +152,7 @@ export default function VelasIndex({ auth, products, categories, filters }) {
                 </div>
 
             </div>
+            <Footer />
         </>
     );
 }

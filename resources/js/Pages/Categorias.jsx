@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
+import Footer from '@/Components/Footer';
 
-/* --- COMPONENTE TARJETA DE CATEGORÍA (CORREGIDO) --- */
+/* --- COMPONENTE TARJETA DE CATEGORÍA --- */
 function CategoryCard({ category, colorClass }) {
     const images = category.products && category.products.length > 0
         ? category.products.map(p => `/storage/${p.image}`)
@@ -58,9 +59,9 @@ function CategoryCard({ category, colorClass }) {
 
 /* --- EL RESTO DEL ARCHIVO SIGUE IGUAL --- */
 function HeroSlider({ categories }) {
-    const allProducts = categories.flatMap(cat =>
-        cat.products.map(prod => ({ ...prod, categoryName: cat.name }))
-    );
+    const allProducts = categories
+        .flatMap(cat => cat.products.map(prod => ({ ...prod, categoryName: cat.name })))
+        .sort(() => Math.random() - 0.5);
     const [currentIndex, setCurrentIndex] = useState(0);
     useEffect(() => {
         if (allProducts.length === 0) return;
@@ -72,11 +73,23 @@ function HeroSlider({ categories }) {
     if (allProducts.length === 0) return <div className="h-96 bg-gray-200 rounded-3xl flex items-center justify-center">No hay productos activos</div>;
     const currentProduct = allProducts[currentIndex];
     return (
-        <div className="relative w-full h-[600px] rounded-3xl overflow-hidden shadow-xl">
+        <Link
+            href={route('products.show', currentProduct.slug)}
+            className="block relative w-full h-[600px] rounded-3xl overflow-hidden shadow-xl cursor-pointer"
+        >
             <div className="absolute inset-0 bg-neutral-900">
                 {allProducts.map((prod, index) => (
-                    <img key={prod.id} src={`/storage/${prod.image}`} alt={prod.name}
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-70' : 'opacity-0'}`}
+                    <img
+                        key={prod.id}
+                        src={`/storage/${prod.image}`}
+                        alt={prod.name}
+                        className={`
+        absolute inset-0 w-full h-full object-cover
+        transition-all duration-[6000ms] ease-out
+        ${index === currentIndex
+                                ? 'opacity-70 scale-105'
+                                : 'opacity-0 scale-100'}
+    `}
                     />
                 ))}
             </div>
@@ -87,7 +100,7 @@ function HeroSlider({ categories }) {
                     <p className="mt-4 text-gray-200 text-lg">Descubre la esencia perfecta para tu espacio.</p>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
 
@@ -116,6 +129,8 @@ export default function CategoriesIndex({ auth, categories }) {
                     </div>
                 </div>
             </div>
+            <Footer />
+
         </>
     );
 }

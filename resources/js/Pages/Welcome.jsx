@@ -1,6 +1,7 @@
 import { Link, Head } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/Components/Navbar';
+import Footer from '@/Components/Footer'
 
 /* --- CARRUSEL DINÁMICO  --- */
 function CategoryCard({ category, colorClass }) {
@@ -140,11 +141,8 @@ export default function Welcome({ auth, products, categories }) {
                         ))}
                     </div>
                 </section>
-
-                <footer className="bg-neutral-900 text-white py-12 text-center">
-                    <p className="text-neutral-500">&copy; 2025 Hikari Candles.</p>
-                </footer>
             </div>
+            <Footer />
         </>
     );
 }
