@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 import { useCart } from '@/Hooks/useCart';
+import Footer from '@/Components/Footer';
 
 export default function ProductDetail({ auth, product, relatedProducts, scents, sizes }) {
 
@@ -10,6 +11,7 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
     const [quantity, setQuantity] = useState(1);
     const [selectedScent, setSelectedScent] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
+    const [showMessage, setShowMessage] = useState(false);
 
     const isImperial = product.category?.slug === 'Luminaria Imperial';
 
@@ -29,6 +31,9 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
         };
 
         addToCart(customizedItem, quantity);
+
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 3000);
     };
 
     return (
@@ -68,7 +73,6 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
                                 ${product.price}
                             </p>
 
-                            {/* Tamaño fijo si no es clásica */}
                             {!isImperial && (
                                 <p className="text-sm text-neutral-500 mb-6">
                                     Tamaño: {product.size}
@@ -100,7 +104,7 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
                                 </select>
                             </div>
 
-                            {/* Tamaño solo para clásicas */}
+                            {/* Tamaño solo para imperiales */}
                             {isImperial && (
                                 <div className="mb-6">
                                     <label className="block text-sm font-bold mb-2">
@@ -150,6 +154,12 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
                             >
                                 Añadir al Carrito
                             </button>
+
+                            {showMessage && (
+                                <p className="mt-4 text-green-600 font-semibold">
+                                    Tu producto ha sido añadido al carrito exitosamente!
+                                </p>
+                            )}
 
                         </div>
                     </div>
@@ -201,6 +211,8 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
 
                 </div>
             </div>
+
+            <Footer />
         </>
     );
 }
