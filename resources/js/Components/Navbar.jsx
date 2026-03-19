@@ -18,9 +18,7 @@ export default function Navbar({ auth }) {
     };
 
     useEffect(() => {
-
         updateCartBadge();
-
         window.addEventListener('cart-updated', updateCartBadge);
         window.addEventListener('storage', updateCartBadge);
 
@@ -28,31 +26,21 @@ export default function Navbar({ auth }) {
             window.removeEventListener('cart-updated', updateCartBadge);
             window.removeEventListener('storage', updateCartBadge);
         };
-
     }, []);
 
     useEffect(() => {
-
         if (searchTerm.length > 1 && all_products) {
-
             const filtered = all_products.filter(product =>
                 product.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
-
             setSuggestions(filtered.slice(0, 5));
-
         } else {
-
             setSuggestions([]);
-
         }
-
     }, [searchTerm, all_products]);
 
     return (
-
         <nav className="sticky top-0 backdrop-blur bg-white/90 border-b border-gray-100 z-50">
-
             <div className="flex justify-between items-center p-6 max-w-7xl mx-auto">
 
                 {/* LOGO */}
@@ -67,7 +55,6 @@ export default function Navbar({ auth }) {
 
                 {/* BUSCADOR (desktop) */}
                 <div className="hidden lg:block flex-1 max-w-md mx-10 relative">
-
                     <input
                         type="text"
                         placeholder="Buscar velas..."
@@ -78,129 +65,99 @@ export default function Navbar({ auth }) {
 
                     {suggestions.length > 0 && (
                         <div className="absolute top-full left-0 w-full bg-white mt-2 rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-
                             {suggestions.map(s => (
-
                                 <Link
                                     key={s.id}
                                     href={route('products.show', s.slug)}
                                     onClick={() => setSearchTerm('')}
                                     className="flex items-center gap-3 p-3 hover:bg-orange-50 transition"
                                 >
-
                                     <img
                                         src={`/storage/${s.image}`}
                                         className="w-10 h-10 object-cover rounded-md"
+                                        alt={s.name}
                                     />
-
                                     <span className="text-sm font-medium text-gray-700">
                                         {s.name}
                                     </span>
-
                                 </Link>
-
                             ))}
-
                         </div>
                     )}
-
                 </div>
 
                 {/* MENÚ DESKTOP */}
                 <ul className="hidden md:flex items-center space-x-6 text-sm font-semibold text-neutral-600">
-
                     <li>
-                        <Link href="/" className="hover:text-orange-600">Inicio</Link>
+                        <Link href="/" className="hover:text-orange-600 transition">Inicio</Link>
                     </li>
-
                     <li>
-                        <Link href={route('categorias')} className="hover:text-orange-600">Categorias</Link>
+                        <Link href={route('categorias')} className="hover:text-orange-600 transition">Categorías</Link>
                     </li>
-
                     <li>
-                        <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
+                        <Link href={route('velas')} className="hover:text-orange-600 transition">Velas</Link>
                     </li>
-
                     <li>
-                        <a href={route('conocenos')} className="hover:text-orange-600">Conocenos</a>
+                        <a href={route('conocenos')} className="hover:text-orange-600 transition">Conócenos</a>
                     </li>
-
-
                     <li>
-
-                        <Link href={route('cart')} className="relative p-2 hover:bg-gray-50 rounded-full transition">
-
-                            <span className="text-xl">🛒</span>
-
-                            {itemCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">
-                                    {itemCount}
-                                </span>
-                            )}
-
+                        {/* --- ENLACE AL CARRITO MODIFICADO (DESKTOP) --- */}
+                        <Link href={route('cart')} className="flex items-center gap-2 hover:text-orange-600 transition">
+                            <div className="relative">
+                                <span className="text-xl">🛒</span>
+                                {itemCount > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">
+                                        {itemCount}
+                                    </span>
+                                )}
+                            </div>
+                            <span>Mi carrito</span>
                         </Link>
-
                     </li>
-
                 </ul>
 
-                {/* BOTÓN HAMBURGUESA */}
+                {/* BOTÓN HAMBURGUESA (MÓVIL) */}
                 <button
                     className="md:hidden text-2xl"
                     onClick={() => setOpen(!open)}
                 >
                     ☰
                 </button>
-
             </div>
 
             {/* MENÚ MÓVIL */}
             {open && (
-
                 <div className="md:hidden border-t border-gray-100 bg-white">
-
                     <ul className="flex flex-col p-6 space-y-4 text-sm font-semibold text-neutral-700">
-
                         <li>
-                        <Link href="/" className="hover:text-orange-600">Inicio</Link>
-                    </li>
-
-                    <li>
-                        <Link href={route('categorias')} className="hover:text-orange-600">Categorias</Link>
-                    </li>
-
-                    <li>
-                        <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
-                    </li>
-
-                    <li>
-                        <a href={route('conocenos')} className="hover:text-orange-600">Conocenos</a>
-                    </li>
-
-
-                    <li>
-
-                        <Link href={route('cart')} className="relative p-2 hover:bg-gray-50 rounded-full transition">
-
-                            <span className="text-xl">🛒</span>
-
-                            {itemCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">
-                                    {itemCount}
-                                </span>
-                            )}
-
-                        </Link>
-
-                    </li>
-
+                            <Link href="/" className="hover:text-orange-600">Inicio</Link>
+                        </li>
+                        <li>
+                            <Link href={route('categorias')} className="hover:text-orange-600">Categorías</Link>
+                        </li>
+                        <li>
+                            <Link href={route('velas')} className="hover:text-orange-600">Velas</Link>
+                        </li>
+                        <li>
+                            <a href={route('conocenos')} className="hover:text-orange-600">Conócenos</a>
+                        </li>
+                        <li>
+                            {/* --- ENLACE AL CARRITO MODIFICADO (MÓVIL) --- */}
+                            <Link href={route('cart')} className="flex items-center gap-2 hover:text-orange-600 transition w-fit">
+                                <div className="relative">
+                                    <span className="text-xl">🛒</span>
+                                    {itemCount > 0 && (
+                                        <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">
+                                            {itemCount}
+                                        </span>
+                                    )}
+                                </div>
+                                <span>Mi carrito</span>
+                            </Link>
+                        </li>
                     </ul>
-
                 </div>
-
             )}
-
         </nav>
-
     );
 }
