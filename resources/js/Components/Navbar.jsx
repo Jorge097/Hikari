@@ -61,7 +61,7 @@ export default function Navbar({ auth }) {
                         <img src="/images/Logo.png" alt="Logo" className="w-full h-full object-cover" />
                     </div>
                     <div className="text-2xl font-bold text-black tracking-tighter">
-                        HIKARI
+                        HIKARI CANDLES AND CO.
                     </div>
                 </Link>
 
