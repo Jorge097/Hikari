@@ -26,7 +26,9 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('panel_hikari')
+            ->brandLogo(asset('images/Logo.png'))
+            ->brandName('HIKARI')
             ->colors([
                 'primary' => Color::Amber,
             ])
