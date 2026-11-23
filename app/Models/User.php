@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -24,6 +25,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -46,12 +48,25 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
         ];
     }
 
-    // Solo correos en ADMIN_EMAILS
+    // Admin por rol o por ADMIN_EMAILS (acceso de respaldo)
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::Admin
+            || in_array(strtolower($this->email), config('app.admin_emails'), true);
+    }
+
+    public function isContador(): bool
+    {
+        return $this->role === UserRole::Contador;
+    }
+
+    // Usuarios sin rol (p. ej. registro público) no entran
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array(strtolower($this->email), config('app.admin_emails'), true);
+        return $this->isAdmin() || $this->isContador();
     }
 }

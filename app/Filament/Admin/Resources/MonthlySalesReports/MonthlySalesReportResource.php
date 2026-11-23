@@ -77,6 +77,7 @@ class MonthlySalesReportResource extends Resource
             ->label('Regenerar')
             ->icon(Heroicon::OutlinedArrowPath)
             ->color('warning')
+            ->visible(fn () => auth()->user()->isAdmin())
             ->requiresConfirmation()
             ->modalDescription('Vuelve a calcular el mes con los pagos actuales y reemplaza el archivo. No reenvía el correo.')
             ->action(function (MonthlySalesReport $record) {

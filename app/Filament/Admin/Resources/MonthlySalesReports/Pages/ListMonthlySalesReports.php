@@ -22,6 +22,7 @@ class ListMonthlySalesReports extends ListRecords
             // Genera cualquier mes a mano
             Action::make('generate')
                 ->label('Generar mes')
+                ->visible(fn () => auth()->user()->isAdmin())
                 ->schema([
                     Select::make('month')->label('Mes')->options(SalesFilters::months())->default(now()->month)->required(),
                     Select::make('year')->label('Año')->options(SalesFilters::years())->default(now()->year)->required(),

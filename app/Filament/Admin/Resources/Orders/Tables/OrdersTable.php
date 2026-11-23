@@ -6,6 +6,7 @@ use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
 use App\Filament\Admin\Support\SalesFilters;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -56,6 +57,7 @@ class OrdersTable
                     ->options(OrderOrigin::class),
             ])
             ->recordActions([
+                ViewAction::make()->hidden(fn ($record) => auth()->user()->can('update', $record)),
                 EditAction::make(),
             ]);
     }
