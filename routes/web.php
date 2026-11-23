@@ -27,6 +27,9 @@ Route::controller(PublicController::class)->group(function () {
     Route::get('/Conocenos', 'conocenos')
         ->name('conocenos');
 
+    Route::get('/aviso-de-privacidad', 'privacy')
+        ->name('privacy');
+
 });
 
 /* CHECKOUT Y PAGOS */

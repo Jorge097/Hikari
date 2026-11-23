@@ -53,12 +53,29 @@ class CheckoutTest extends TestCase
         $this->assertSame('Grande', $order->items[1]->size);
         $this->assertSame('250g', $order->items[0]->size);
         $this->assertSame('ana@example.com', $order->customer->email);
+        $this->assertNotNull($order->privacy_accepted_at);
+        $this->assertSame(config('hikari.privacy.version'), $order->privacy_version);
 
         $payment = $order->payments->sole();
         $this->assertSame('stripe', $payment->provider);
         $this->assertSame(PaymentStatus::Pendiente, $payment->status);
         $this->assertSame('cs_test_1', $payment->reference);
         $this->assertStringContainsString('{CHECKOUT_SESSION_ID}', $this->gateway->sessions['cs_test_1']['successUrl']);
+    }
+
+    public function test_exige_aceptar_aviso_de_privacidad(): void
+    {
+        $this->post('/checkout', $this->checkoutData(['privacy_accepted' => false]))
+            ->assertSessionHasErrors('privacy_accepted');
+
+        $this->assertDatabaseCount('orders', 0);
+    }
+
+    public function test_pagina_de_aviso_de_privacidad(): void
+    {
+        $this->get('/aviso-de-privacidad')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('AvisoPrivacidad')->has('privacy.version'));
     }
 
     public function test_envio_nacional_suma_costo_y_pide_direccion(): void

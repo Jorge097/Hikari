@@ -14,6 +14,15 @@ return [
     // Destinatarios del reporte mensual (separados por coma)
     'report_emails' => array_filter(array_map('trim', explode(',', (string) env('HIKARI_REPORT_EMAILS', '')))),
 
+    // Datos del responsable para el aviso de privacidad (completar en .env)
+    'privacy' => [
+        'version' => '2026-11-22',
+        'responsible' => env('HIKARI_PRIVACY_RESPONSIBLE', 'Hikari Candles & Co.'),
+        'address' => env('HIKARI_PRIVACY_ADDRESS'),
+        'email' => env('HIKARI_PRIVACY_EMAIL'),
+        'phone' => env('HIKARI_PRIVACY_PHONE', '871 781 1541'),
+    ],
+
     // Folio: HK-001, HK-002... HK-1000
     'folio_prefix' => 'HK-',
     'folio_padding' => 3,

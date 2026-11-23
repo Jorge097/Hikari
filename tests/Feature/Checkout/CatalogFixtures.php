@@ -40,6 +40,7 @@ trait CatalogFixtures
             'email' => 'ana@example.com',
             'phone' => '8711234567',
             'delivery' => 'local',
+            'privacy_accepted' => true,
             'items' => [
                 ['product_id' => $this->vela->id, 'scent' => 'Vainilla', 'size' => '250g', 'quantity' => 2],
                 ['product_id' => $this->imperial->id, 'scent' => 'Vainilla', 'size' => 'Grande', 'quantity' => 1],

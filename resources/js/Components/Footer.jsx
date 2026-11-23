@@ -1,3 +1,5 @@
+import { Link } from '@inertiajs/react';
+
 export default function Footer() {
 
     const whatsappMessage = encodeURIComponent(
@@ -50,9 +52,13 @@ export default function Footer() {
 
 
                 {/* DERECHA */}
-                <div className="flex items-center justify-center md:justify-end text-sm text-neutral-400">
+                <div className="flex flex-col items-center md:items-end justify-center gap-2 text-sm text-neutral-400">
 
-                    © {new Date().getFullYear()} Hikari Candles
+                    <Link href={route('privacy')} className="hover:text-orange-400 underline-offset-4 hover:underline">
+                        Aviso de privacidad
+                    </Link>
+
+                    <span>© {new Date().getFullYear()} Hikari Candles</span>
 
                 </div>
 

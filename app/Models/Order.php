@@ -24,7 +24,7 @@ class Order extends Model
         'shipping_cents',
         'shipping_name', 'shipping_phone', 'shipping_address', 'shipping_city',
         'shipping_state', 'shipping_postal_code', 'carrier', 'tracking_number', 'tracking_url',
-        'required_date', 'notes',
+        'required_date', 'notes', 'privacy_accepted_at', 'privacy_version',
     ];
 
     protected $attributes = [
@@ -42,6 +42,7 @@ class Order extends Model
             'exchange_rate' => 'decimal:6',
             'tax_rate' => 'decimal:4',
             'prices_include_tax' => 'boolean',
+            'privacy_accepted_at' => 'datetime',
             'subtotal_cents' => 'integer',
             'shipping_cents' => 'integer',
             'tax_cents' => 'integer',

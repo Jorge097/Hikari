@@ -155,4 +155,11 @@ class PublicController extends Controller
     {
         return Inertia::render('Conocenos');
     }
+
+    public function privacy()
+    {
+        return Inertia::render('AvisoPrivacidad', [
+            'privacy' => config('hikari.privacy'),
+        ]);
+    }
 }

@@ -31,6 +31,7 @@ export default function Checkout({ auth, shippingNationalCents, onlinePaymentsEn
         shipping_postal_code: '',
         required_date: '',
         notes: '',
+        privacy_accepted: false,
     });
 
     const national = data.delivery === 'nacional';
@@ -159,6 +160,15 @@ export default function Checkout({ auth, shippingNationalCents, onlinePaymentsEn
                                     <div className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{itemErrors.map((m) => <p key={m}>{m}</p>)}</div>
                                 )}
                                 <InputError message={errors.payment} />
+
+                                <label className="flex items-start gap-2 text-sm text-gray-600">
+                                    <input type="checkbox" className="mt-1 rounded" checked={data.privacy_accepted} onChange={(e) => setData('privacy_accepted', e.target.checked)} required />
+                                    <span>
+                                        He leído y acepto el{' '}
+                                        <a href={route('privacy')} target="_blank" rel="noopener" className="font-bold underline">aviso de privacidad</a>.
+                                    </span>
+                                </label>
+                                <InputError message={errors.privacy_accepted} />
 
                                 {onlinePaymentsEnabled ? (
                                     <button type="submit" disabled={processing} className="w-full bg-neutral-900 text-white py-4 rounded-full font-bold hover:bg-neutral-700 disabled:opacity-50 transition">

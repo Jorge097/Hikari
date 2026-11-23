@@ -27,6 +27,7 @@ class CheckoutRequest extends FormRequest
             'shipping_postal_code' => [Rule::requiredIf($national), 'nullable', 'digits:5'],
             'required_date' => ['nullable', 'date', 'after_or_equal:today'],
             'notes' => ['nullable', 'string', 'max:1000'],
+            'privacy_accepted' => ['accepted'],
             'items' => ['required', 'array', 'min:1', 'max:50'],
             'items.*.product_id' => ['required', 'integer'],
             'items.*.scent' => ['required', 'string', 'max:100'],
@@ -47,6 +48,13 @@ class CheckoutRequest extends FormRequest
             'shipping_postal_code' => 'código postal',
             'required_date' => 'fecha requerida',
             'items' => 'carrito',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'privacy_accepted.accepted' => 'Debes aceptar el aviso de privacidad para continuar.',
         ];
     }
 }

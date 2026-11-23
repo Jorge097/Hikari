@@ -35,6 +35,8 @@ class CheckoutService
                 'shipping_state' => $data['shipping_state'] ?? null,
                 'shipping_postal_code' => $data['shipping_postal_code'] ?? null,
                 'required_date' => $data['required_date'] ?? null,
+                'privacy_accepted_at' => now(),
+                'privacy_version' => config('hikari.privacy.version'),
                 'notes' => trim(($national ? 'Envío nacional' : 'Entrega local / recoger')
                     ."\n".($data['notes'] ?? '')),
             ]);
