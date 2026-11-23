@@ -23,6 +23,16 @@ return [
         'phone' => env('HIKARI_PRIVACY_PHONE', '871 781 1541'),
     ],
 
+    // CFDI 4.0; claves SAT pendientes de confirmar con el contador
+    'invoicing' => [
+        'serie' => env('HIKARI_CFDI_SERIE', 'HK'),
+        'expedition_place' => env('HIKARI_CFDI_EXPEDITION_PLACE'),
+        'product_code' => env('HIKARI_CFDI_PRODUCT_CODE', '01010101'),
+        'shipping_product_code' => env('HIKARI_CFDI_SHIPPING_CODE', '78102203'),
+        'unit_code' => 'H87', // Pieza
+        'shipping_unit_code' => 'E48', // Unidad de servicio
+    ],
+
     // Folio: HK-001, HK-002... HK-1000
     'folio_prefix' => 'HK-',
     'folio_padding' => 3,

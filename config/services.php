@@ -35,6 +35,13 @@ return [
         ],
     ],
 
+    // PAC: Facturama API Web (sandbox hasta producción)
+    'facturama' => [
+        'user' => env('FACTURAMA_USER'),
+        'password' => env('FACTURAMA_PASSWORD'),
+        'sandbox' => (bool) env('FACTURAMA_SANDBOX', true),
+    ],
+
     'stripe' => [
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),

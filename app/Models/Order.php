@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InvoiceStatus;
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
@@ -100,6 +101,30 @@ class Order extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    // Factura de ingreso vigente o en trámite
+    public function activeInvoice(): ?Invoice
+    {
+        return $this->invoices
+            ->where('type', 'I')
+            ->whereIn('status', InvoiceStatus::active())
+            ->sortByDesc('id')
+            ->first();
+    }
+
+    // Total reembolsado en centavos
+    public function refundedCents(): int
+    {
+        return (int) $this->payments()
+            ->where('status', PaymentStatus::Completado)
+            ->where('type', PaymentType::Reembolso)
+            ->sum('amount_cents');
     }
 
     // Recalcula el desglose desde las partidas
