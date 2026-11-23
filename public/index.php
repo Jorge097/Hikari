@@ -1,8 +1,10 @@
 <?php
 
-if (!function_exists('tmpfile')) {
-    function tmpfile() {
+if (! function_exists('tmpfile')) {
+    function tmpfile()
+    {
         $temp = tempnam(sys_get_temp_dir(), 'tmp_');
+
         return fopen($temp, 'w+');
     }
 }
@@ -17,11 +19,13 @@ if (file_exists($maintenance = __DIR__.'/../Hikari/storage/framework/maintenance
 }
 
 // Register the Composer autoloader...
-require __DIR__.'/../Hikari/vendor/autoload.php';
+// require __DIR__.'/../Hikari/vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
 /** @var Application $app */
-$app = require_once __DIR__.'/../Hikari/bootstrap/app.php';
+// $app = require_once __DIR__.'/../Hikari/bootstrap/app.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
 
 // 2. AVISARLE A LARAVEL DONDE ESTA LA NUEVA CARPETA PUBLICA
 $app->usePublicPath(__DIR__);

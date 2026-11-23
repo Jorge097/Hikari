@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('panel_hikari')
+            ->login()
             ->brandLogo(asset('images/Logo.png'))
             ->brandName('HIKARI')
             ->colors([
