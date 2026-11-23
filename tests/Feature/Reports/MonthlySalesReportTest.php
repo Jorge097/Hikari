@@ -190,11 +190,28 @@ class MonthlySalesReportTest extends TestCase
             ->assertCanSeeTableRecords([$oct])
             ->assertCanNotSeeTableRecords([$nov]);
 
+        // Noviembre en curso: aún no se puede elegir
+        $this->travelTo(now()->setDate(2026, 11, 20));
         Livewire::test(ListMonthlySalesReports::class)
-            ->callAction('generate', ['month' => 11, 'year' => 2026, 'send_email' => false])
-            ->assertHasNoActionErrors();
+            ->callAction('open_month', ['month' => 11, 'year' => 2026])
+            ->assertHasActionErrors(['month']);
+
+        // Ya en diciembre: noviembre cerró y se genera al elegirlo
+        $this->travelTo(now()->setDate(2026, 12, 5));
+        Livewire::test(ListMonthlySalesReports::class)
+            ->mountAction('open_month')
+            ->assertActionDataSet(['month' => 11, 'year' => 2026]);
+
+        Livewire::test(ListMonthlySalesReports::class)
+            ->callAction('open_month', ['month' => 11, 'year' => 2026])
+            ->assertHasNoActionErrors()
+            ->assertRedirect();
 
         $report = MonthlySalesReport::sole();
+        Livewire::test(ListMonthlySalesReports::class)
+            ->assertCanSeeTableRecords([$report])
+            ->filterTable('month', 10)
+            ->assertCanNotSeeTableRecords([$report]);
         $this->get('/panel_hikari/monthly-sales-reports')->assertOk()->assertSee('Noviembre 2026');
         $this->get("/panel_hikari/monthly-sales-reports/{$report->id}")->assertOk();
 

@@ -5,11 +5,9 @@ namespace Tests\Feature\Panel;
 use App\Enums\UserRole;
 use App\Filament\Admin\Resources\MonthlySalesReports\Pages\ListMonthlySalesReports;
 use App\Filament\Admin\Resources\Orders\Pages\ListOrders;
-use App\Filament\Admin\Resources\Users\Pages\CreateUser;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -41,16 +39,15 @@ class RolesTest extends TestCase
         $this->get("/panel_hikari/customers/{$order->customer_id}/edit")->assertForbidden();
     }
 
-    public function test_contador_no_ve_catalogo_ni_usuarios(): void
+    public function test_contador_no_ve_catalogo(): void
     {
         $this->actingAs(User::factory()->create(['role' => UserRole::Contador]));
 
         $this->get('/panel_hikari/products')->assertForbidden();
         $this->get('/panel_hikari/categories')->assertForbidden();
-        $this->get('/panel_hikari/users')->assertForbidden();
     }
 
-    public function test_contador_exporta_pero_no_genera_reportes(): void
+    public function test_contador_exporta_y_consulta_meses(): void
     {
         $this->actingAs(User::factory()->create(['role' => UserRole::Contador]));
 
@@ -58,7 +55,7 @@ class RolesTest extends TestCase
             ->assertActionVisible('export_xlsx')
             ->assertActionHidden('create');
 
-        Livewire::test(ListMonthlySalesReports::class)->assertActionHidden('generate');
+        Livewire::test(ListMonthlySalesReports::class)->assertActionVisible('open_month');
     }
 
     public function test_usuario_sin_rol_no_entra(): void
@@ -74,25 +71,12 @@ class RolesTest extends TestCase
         $this->actingAs(User::factory()->create(['role' => UserRole::Admin]));
 
         $this->get('/panel_hikari/products')->assertOk();
-        $this->get('/panel_hikari/users')->assertOk();
     }
 
-    public function test_admin_crea_usuario_contador(): void
+    public function test_usuarios_ya_no_esta_en_el_panel(): void
     {
         $this->actingAs(User::factory()->create(['role' => UserRole::Admin]));
 
-        Livewire::test(CreateUser::class)
-            ->fillForm([
-                'name' => 'Contador',
-                'email' => 'contador@hikari.test',
-                'role' => UserRole::Contador->value,
-                'password' => 'una-clave-segura-123',
-            ])
-            ->call('create')
-            ->assertHasNoFormErrors();
-
-        $user = User::where('email', 'contador@hikari.test')->sole();
-        $this->assertSame(UserRole::Contador, $user->role);
-        $this->assertTrue(Hash::check('una-clave-segura-123', $user->password));
+        $this->get('/panel_hikari/users')->assertNotFound();
     }
 }

@@ -26,6 +26,20 @@ class SalesFilters
         return array_combine($years, $years);
     }
 
+    // [año, mes] del último mes cerrado
+    public static function previousMonth(): array
+    {
+        $previous = now()->subMonthNoOverflow();
+
+        return [$previous->year, $previous->month];
+    }
+
+    // El mes en curso y los futuros aún no cierran
+    public static function isClosedMonth(int $year, int $month): bool
+    {
+        return $year * 12 + $month < now()->year * 12 + now()->month;
+    }
+
     // De X a Y por fecha de pago
     public static function paidRange(): Filter
     {

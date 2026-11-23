@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\MonthlySalesReports;
 
 use App\Filament\Admin\Resources\MonthlySalesReports\Pages\ListMonthlySalesReports;
 use App\Filament\Admin\Resources\MonthlySalesReports\Pages\ViewMonthlySalesReport;
+use App\Filament\Admin\Support\SalesFilters;
 use App\Jobs\GenerateMonthlySalesReport;
 use App\Models\MonthlySalesReport;
 use BackedEnum;
@@ -13,7 +14,10 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use UnitEnum;
 
@@ -41,6 +45,13 @@ class MonthlySalesReportResource extends Resource
         $mxn = fn (string $name, string $label) => TextColumn::make($name)->label($label)->money('MXN', divideBy: 100);
 
         return $table
+            // Solo meses cerrados; el mes en curso aún no termina
+            ->modifyQueryUsing(fn (Builder $query) => $query->whereRaw('year * 12 + month < ?', [now()->year * 12 + now()->month]))
+            ->filters([
+                SelectFilter::make('year')->label('Año')->options(SalesFilters::years()),
+                SelectFilter::make('month')->label('Mes')->options(SalesFilters::months()),
+            ])
+            ->filtersLayout(FiltersLayout::AboveContent)
             ->columns([
                 TextColumn::make('period')
                     ->label('Mes')

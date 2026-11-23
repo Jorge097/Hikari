@@ -51,16 +51,24 @@ class DeployTest extends TestCase
         mkdir("{$public}/build", 0777, true);
         mkdir("{$public}/storage");
         file_put_contents("{$public}/build/manifest.json", '{}');
-        $original = public_path();
+        // storage/ propio: OneDrive marca las carpetas locales como solo lectura
+        mkdir("{$public}/app-storage/app", 0777, true);
+        mkdir("{$public}/app-storage/logs");
+        $original = [public_path(), storage_path()];
         $this->app->usePublicPath($public);
+        $this->app->useStoragePath("{$public}/app-storage");
 
         try {
             $this->artisan('hikari:preflight')->assertSuccessful();
         } finally {
-            $this->app->usePublicPath($original);
+            $this->app->usePublicPath($original[0]);
+            $this->app->useStoragePath($original[1]);
             unlink("{$public}/build/manifest.json");
             rmdir("{$public}/build");
             rmdir("{$public}/storage");
+            rmdir("{$public}/app-storage/app");
+            rmdir("{$public}/app-storage/logs");
+            rmdir("{$public}/app-storage");
             rmdir($public);
         }
     }
