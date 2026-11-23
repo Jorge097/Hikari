@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 import { useCart } from '@/Hooks/useCart';
 import Footer from '@/Components/Footer'; 
@@ -7,6 +7,7 @@ import Footer from '@/Components/Footer';
 export default function Cart({ auth }) {
 
     const { cart, removeFromCart, cartTotal } = useCart();
+    const { flash } = usePage().props;
 
     const sendWhatsApp = () => {
         const phoneNumber = "528717811541";
@@ -40,6 +41,12 @@ export default function Cart({ auth }) {
                 <div className="max-w-4xl mx-auto px-6 py-12">
                     <h1 className="text-3xl font-bold mb-8 text-neutral-800">Tu Pedido</h1>
 
+                    {flash?.message && (
+                        <div className="mb-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-amber-800 text-sm">
+                            {flash.message}
+                        </div>
+                    )}
+
                     {cart.length === 0 ? (
                         <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100">
                             <p className="text-gray-500 text-lg">Tu carrito está vacío.</p>
@@ -65,7 +72,7 @@ export default function Cart({ auth }) {
                                         </div>
 
                                         <div className="flex items-center gap-6">
-                                            <p className="font-bold text-neutral-900">${item.price * item.quantity}</p>
+                                            <p className="font-bold text-neutral-900">${(item.price * item.quantity).toFixed(2)}</p>
                                             <button
                                                 onClick={() => removeFromCart(item.uniqueId)}
                                                 className="text-red-500 text-xs hover:underline"
@@ -79,13 +86,22 @@ export default function Cart({ auth }) {
 
                             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-right">
                                 <p className="text-gray-500 mb-1">Total del pedido:</p>
-                                <p className="text-3xl font-black text-neutral-900 mb-8">${cartTotal}</p>
-                                <button
-                                    onClick={sendWhatsApp}
-                                    className="w-full md:w-auto bg-green-500 text-white px-10 py-4 rounded-full font-bold hover:bg-green-600 shadow-lg transition transform hover:-translate-y-1"
-                                >
-                                    Enviar pedido por WhatsApp 📱
-                                </button>
+                                <p className="text-3xl font-black text-neutral-900 mb-8">${cartTotal.toFixed(2)}</p>
+                                <div className="flex flex-col md:flex-row gap-3 md:justify-end">
+                                    <Link
+                                        href={route('checkout')}
+                                        className="w-full md:w-auto bg-neutral-900 text-white px-10 py-4 rounded-full font-bold hover:bg-neutral-700 shadow-lg transition text-center"
+                                    >
+                                        Pagar en línea
+                                    </Link>
+                                    <button
+                                        onClick={sendWhatsApp}
+                                        className="w-full md:w-auto bg-green-500 text-white px-10 py-4 rounded-full font-bold hover:bg-green-600 shadow-lg transition"
+                                    >
+                                        Enviar pedido por WhatsApp 📱
+                                    </button>
+                                </div>
+                                <p className="text-xs text-gray-400 mt-3">Pago con tarjeta, meses sin intereses, OXXO o transferencia SPEI.</p>
                             </div>
                         </div>
                     )}

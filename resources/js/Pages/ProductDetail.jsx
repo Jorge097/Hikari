@@ -15,6 +15,12 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
 
     const isImperial = product.category?.slug === 'Luminaria Imperial';
 
+    // Precio con el extra del tamaño (igual que el servidor)
+    const extraPrice = isImperial
+        ? Number(sizes?.find((s) => s.name === selectedSize)?.extra_price ?? 0)
+        : 0;
+    const unitPrice = Number(product.price) + extraPrice;
+
     const handleAddToCart = () => {
 
         if (!selectedScent) return;
@@ -25,6 +31,7 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
 
         const customizedItem = {
             ...product,
+            price: unitPrice,
             selectedScent,
             selectedSize: sizeValue,
             uniqueId: `${product.id}-${selectedScent}-${sizeValue}`
@@ -70,7 +77,7 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
                             </h1>
 
                             <p className="text-3xl text-neutral-800 font-medium mb-2">
-                                ${product.price}
+                                ${unitPrice.toFixed(2)}
                             </p>
 
                             {!isImperial && (
@@ -121,6 +128,7 @@ export default function ProductDetail({ auth, product, relatedProducts, scents, 
                                         {sizes?.map((size) => (
                                             <option key={size.id} value={size.name}>
                                                 {size.name}
+                                                {Number(size.extra_price) > 0 ? ` (+$${Number(size.extra_price).toFixed(2)})` : ''}
                                             </option>
                                         ))}
                                     </select>
