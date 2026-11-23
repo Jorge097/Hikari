@@ -49,12 +49,6 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    // Relación: Un usuario tiene muchas compras
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
     // Solo correos en ADMIN_EMAILS
     public function canAccessPanel(Panel $panel): bool
     {
