@@ -26,18 +26,26 @@ class SalesFilters
         return array_combine($years, $years);
     }
 
-    // [año, mes] del último mes cerrado
-    public static function previousMonth(): array
+    // Meses cerrados, del más reciente a enero 2025: ['2026-10' => 'Octubre 2026', ...]
+    public static function closedPeriods(): array
     {
-        $previous = now()->subMonthNoOverflow();
+        $periods = [];
+        $date = now()->startOfMonth()->subMonthNoOverflow();
 
-        return [$previous->year, $previous->month];
+        while ($date->year >= 2025) {
+            $periods[$date->format('Y-m')] = SalesReport::monthName($date->month).' '.$date->year;
+            $date = $date->subMonthNoOverflow();
+        }
+
+        return $periods;
     }
 
-    // El mes en curso y los futuros aún no cierran
-    public static function isClosedMonth(int $year, int $month): bool
+    // '2026-10' => [2026, 10]
+    public static function parsePeriod(string $period): array
     {
-        return $year * 12 + $month < now()->year * 12 + now()->month;
+        [$year, $month] = array_map('intval', explode('-', $period));
+
+        return [$year, $month];
     }
 
     // De X a Y por fecha de pago

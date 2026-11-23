@@ -48,14 +48,25 @@ class MonthlySalesReportResource extends Resource
             // Solo meses cerrados; el mes en curso aún no termina
             ->modifyQueryUsing(fn (Builder $query) => $query->whereRaw('year * 12 + month < ?', [now()->year * 12 + now()->month]))
             ->filters([
-                SelectFilter::make('year')->label('Año')->options(SalesFilters::years()),
-                SelectFilter::make('month')->label('Mes')->options(SalesFilters::months()),
+                SelectFilter::make('period')
+                    ->label('Periodo')
+                    ->options(SalesFilters::closedPeriods())
+                    ->query(function (Builder $query, array $data) {
+                        if (blank($data['value'] ?? null)) {
+                            return $query;
+                        }
+
+                        [$year, $month] = SalesFilters::parsePeriod($data['value']);
+
+                        return $query->where('year', $year)->where('month', $month);
+                    }),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
             ->columns([
-                TextColumn::make('period')
+                TextColumn::make('month')
                     ->label('Mes')
-                    ->state(fn (MonthlySalesReport $record) => $record->periodLabel()),
+                    ->formatStateUsing(fn ($state) => SalesFilters::months()[(int) $state] ?? $state),
+                TextColumn::make('year')->label('Año'),
                 TextColumn::make('orders_count')->label('Pedidos'),
                 $mxn('subtotal_mxn_cents', 'Subtotal'),
                 $mxn('tax_mxn_cents', 'IVA'),
