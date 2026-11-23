@@ -15,6 +15,12 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    // Correos con acceso al panel admin (separados por coma)
+    'admin_emails' => array_filter(array_map(
+        fn ($email) => strtolower(trim($email)),
+        explode(',', (string) env('ADMIN_EMAILS', ''))
+    )),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
