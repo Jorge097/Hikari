@@ -71,7 +71,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    // Hora de México: cortes mensuales y fechas del panel
+    'timezone' => env('APP_TIMEZONE', 'America/Mexico_City'),
 
     /*
     |--------------------------------------------------------------------------
