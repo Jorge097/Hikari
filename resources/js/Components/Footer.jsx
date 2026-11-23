@@ -54,6 +54,10 @@ export default function Footer() {
                 {/* DERECHA */}
                 <div className="flex flex-col items-center md:items-end justify-center gap-2 text-sm text-neutral-400">
 
+                    <Link href={route('invoice.request')} className="hover:text-orange-400 underline-offset-4 hover:underline">
+                        Solicitar factura
+                    </Link>
+
                     <Link href={route('privacy')} className="hover:text-orange-400 underline-offset-4 hover:underline">
                         Aviso de privacidad
                     </Link>

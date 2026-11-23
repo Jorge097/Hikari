@@ -36,6 +36,12 @@ export default function CheckoutSuccess({ auth, order }) {
                                 ? 'Te enviamos la confirmación por correo.'
                                 : 'Si pagas con OXXO o transferencia SPEI, confirmaremos tu pedido cuando recibamos el pago. Te avisaremos por correo.'}
                         </p>
+                        {paid && (
+                            <p className="text-sm text-gray-500">
+                                ¿Necesitas factura?{' '}
+                                <Link href={route('invoice.request', { folio: order.folio })} className="font-bold underline">Solicítala aquí</Link>.
+                            </p>
+                        )}
                         <Link href={route('velas')} className="inline-block mt-4 bg-neutral-900 text-white px-8 py-3 rounded-full font-bold hover:bg-neutral-700 transition">
                             Seguir viendo velas
                         </Link>

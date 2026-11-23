@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\InvoiceRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StripeWebhookController;
@@ -40,6 +41,11 @@ Route::controller(CheckoutController::class)->group(function () {
     Route::get('/pedido/confirmado', 'success')->name('checkout.success');
     Route::get('/pedido/cancelado', 'cancel')->name('checkout.cancel');
 });
+
+/* FACTURACIÓN */
+
+Route::get('/factura', [InvoiceRequestController::class, 'show'])->name('invoice.request');
+Route::post('/factura', [InvoiceRequestController::class, 'store'])->middleware('throttle:invoice')->name('invoice.store');
 
 // Sin CSRF (ver bootstrap/app.php); se valida la firma
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
