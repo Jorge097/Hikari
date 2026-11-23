@@ -2,6 +2,7 @@
 
 namespace App\Services\Reports;
 
+use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Models\Order;
@@ -61,7 +62,7 @@ class SalesReport
     public static function rows(Builder $query): Collection
     {
         return $query
-            ->with(['customer', 'payments'])
+            ->with(['customer', 'payments', 'invoices'])
             ->orderBy('paid_at')
             ->orderBy('id')
             ->get()
@@ -78,12 +79,19 @@ class SalesReport
 
         $rate = $order->currency === 'MXN' ? 1 : (float) $order->exchange_rate;
 
+        // Factura de ingreso timbrada (si la hay)
+        $invoice = $order->invoices
+            ->where('type', 'I')
+            ->where('status', InvoiceStatus::Timbrada)
+            ->sortByDesc('id')
+            ->first();
+
         return [
             'order_id' => $order->id,
             'folio' => $order->folio,
             'paid_at' => $order->paid_at,
             'customer_name' => $order->customer?->name,
-            'rfc' => null, // Fase 5 (CFDI)
+            'rfc' => $invoice?->receiver_rfc,
             'subtotal_cents' => $order->subtotal_cents,
             'tax_cents' => $order->tax_cents,
             'shipping_cents' => $order->shipping_cents,
@@ -95,7 +103,7 @@ class SalesReport
             'status' => $order->status->getLabel(),
             'origin' => $order->origin->getLabel(),
             'stripe_payment_id' => $payment?->stripe_payment_intent_id,
-            'cfdi_uuid' => null, // Fase 5 (CFDI)
+            'cfdi_uuid' => $invoice?->uuid,
         ];
     }
 
