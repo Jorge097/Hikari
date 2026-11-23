@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Orders\Tables;
 
 use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
+use App\Filament\Admin\Support\SalesFilters;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -43,7 +44,10 @@ class OrdersTable
                     ->sortable(),
             ])
             ->defaultSort('id', 'desc')
+            ->filtersFormColumns(2)
             ->filters([
+                SalesFilters::salesMonth(),
+                SalesFilters::paidRange(),
                 SelectFilter::make('status')
                     ->label('Estado')
                     ->options(OrderStatus::class),
