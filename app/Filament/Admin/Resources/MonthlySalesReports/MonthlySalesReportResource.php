@@ -31,9 +31,12 @@ class MonthlySalesReportResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    protected static ?string $modelLabel = 'reporte mensual';
+    // Lo que Charlotte envía al contador cada mes
+    protected static ?string $navigationLabel = 'Ventas del mes';
 
-    protected static ?string $pluralModelLabel = 'reportes mensuales';
+    protected static ?string $modelLabel = 'ventas del mes';
+
+    protected static ?string $pluralModelLabel = 'ventas del mes';
 
     public static function canCreate(): bool
     {
@@ -62,6 +65,8 @@ class MonthlySalesReportResource extends Resource
                     }),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
+            ->emptyStateHeading('Sin ventas del mes todavía')
+            ->emptyStateDescription('Usa "Elegir mes" para generar las ventas de un mes cerrado.')
             ->columns([
                 TextColumn::make('month')
                     ->label('Mes')

@@ -17,7 +17,7 @@ class DemoSalesSeederTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_carga_20_pedidos_en_todos_los_estados_sin_duplicar(): void
+    public function test_carga_32_pedidos_en_todos_los_estados_sin_duplicar(): void
     {
         Mail::fake();
         $category = Category::create(['name' => 'Siempre', 'slug' => 'siempre', 'description' => '-', 'is_active' => true]);
@@ -28,16 +28,16 @@ class DemoSalesSeederTest extends TestCase
         $this->seed(DemoSalesSeeder::class);
         $this->seed(DemoSalesSeeder::class); // segunda corrida reemplaza
 
-        $this->assertSame(20, Order::count());
+        $this->assertSame(32, Order::count());
         $this->assertSame('HK-001', Order::orderBy('id')->value('folio'));
 
         $byStatus = Order::all()->countBy(fn ($order) => $order->status->value)->all();
-        $this->assertSame(['pendiente' => 3, 'pagado' => 4, 'enviado' => 4, 'entregado' => 6, 'reembolsado' => 2, 'cancelado' => 1], array_merge(
+        $this->assertSame(['pendiente' => 3, 'pagado' => 4, 'enviado' => 4, 'entregado' => 18, 'reembolsado' => 2, 'cancelado' => 1], array_merge(
             array_fill_keys(['pendiente', 'pagado', 'enviado', 'entregado', 'reembolsado', 'cancelado'], 0),
             $byStatus,
         ));
 
-        $this->assertSame(6, Invoice::count());
+        $this->assertSame(10, Invoice::count());
         $this->assertSame(3, Payment::where('type', 'reembolso')->count());
         $this->assertTrue(Payment::where('provider', 'stripe')->where('type', 'pago')->where('fee_cents', '>', 0)->exists());
         $this->assertTrue(Order::where('status', OrderStatus::Enviado)->whereNotNull('tracking_number')->exists());

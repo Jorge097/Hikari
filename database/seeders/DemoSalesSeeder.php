@@ -15,7 +15,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-// 20 pedidos de prueba para ver el panel con datos. Solo local:
+// 32 pedidos de prueba para ver el panel con datos. Solo local:
 // php artisan db:seed --class=DemoSalesSeeder
 class DemoSalesSeeder extends Seeder
 {
@@ -48,6 +48,19 @@ class DemoSalesSeeder extends Seeder
         [20, 'reembolsado', 'stripe', 150, null],
         [60, 'reembolsado', 'stripe', 0, null],
         [33, 'cancelado', null, 150, null],
+        // Historial de agosto a octubre para los reportes mensuales
+        [27, 'entregado', 'stripe', 150, 'timbrada'],
+        [31, 'entregado', 'transferencia', 180, null],
+        [44, 'entregado', 'stripe', 0, null],
+        [48, 'entregado', 'stripe', 150, 'timbrada'],
+        [57, 'entregado', 'efectivo', 0, null],
+        [64, 'entregado', 'stripe', 220, null],
+        [68, 'entregado', 'transferencia', 150, 'timbrada'],
+        [76, 'entregado', 'stripe', 180, null],
+        [83, 'entregado', 'stripe', 150, null],
+        [88, 'entregado', 'efectivo', 0, null],
+        [99, 'entregado', 'transferencia', 150, 'timbrada'],
+        [104, 'entregado', 'stripe', 180, null],
     ];
 
     private const CUSTOMERS = [
@@ -95,7 +108,7 @@ class DemoSalesSeeder extends Seeder
             }
         });
 
-        $this->command?->info('20 pedidos de prueba cargados (clientes @'.self::DOMAIN.').');
+        $this->command?->info(count(self::ORDERS).' pedidos de prueba cargados (clientes @'.self::DOMAIN.').');
     }
 
     private function createOrder(int $n, Customer $customer, $products, int $daysAgo, string $status, ?string $paidWith, int $shipping, ?string $invoice): void
