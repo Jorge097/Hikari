@@ -14,7 +14,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type', 'provider', 'method', 'status', 'amount_cents', 'currency',
+        'type', 'provider', 'method', 'status', 'amount_cents', 'fee_cents', 'currency',
         'reference', 'stripe_payment_intent_id', 'paid_at', 'notes',
     ];
 
@@ -32,6 +32,7 @@ class Payment extends Model
             'method' => PaymentMethod::class,
             'status' => PaymentStatus::class,
             'amount_cents' => 'integer',
+            'fee_cents' => 'integer',
             'paid_at' => 'datetime',
         ];
     }

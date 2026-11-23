@@ -15,4 +15,7 @@ interface PaymentGateway
 
     // Tipo de método usado (card, oxxo, customer_balance...)
     public function paymentMethodType(string $paymentIntentId): ?string;
+
+    // Comisión cobrada por Stripe en centavos (null si aún no hay cargo)
+    public function feeCents(string $paymentIntentId): ?int;
 }

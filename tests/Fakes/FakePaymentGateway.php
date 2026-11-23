@@ -29,4 +29,11 @@ class FakePaymentGateway implements PaymentGateway
     {
         return $this->methodType;
     }
+
+    public ?int $fee = 1234;
+
+    public function feeCents(string $paymentIntentId): ?int
+    {
+        return $this->fee;
+    }
 }

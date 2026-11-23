@@ -82,4 +82,15 @@ class StripeGateway implements PaymentGateway
 
         return $intent->payment_method->type ?? null;
     }
+
+    public function feeCents(string $paymentIntentId): ?int
+    {
+        $intent = $this->stripe->paymentIntents->retrieve($paymentIntentId, [
+            'expand' => ['latest_charge.balance_transaction'],
+        ]);
+
+        $transaction = $intent->latest_charge->balance_transaction ?? null;
+
+        return is_object($transaction) ? (int) $transaction->fee : null;
+    }
 }

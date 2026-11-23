@@ -82,9 +82,39 @@ class StripeWebhookTest extends TestCase
         $this->assertSame(PaymentStatus::Completado, $payment->status);
         $this->assertSame(PaymentMethod::Tarjeta, $payment->method);
         $this->assertSame('pi_test_1', $payment->stripe_payment_intent_id);
+        $this->assertSame(1234, $payment->fee_cents);
 
         Mail::assertQueued(OrderConfirmation::class, fn ($mail) => $mail->hasTo('ana@example.com'));
         $this->assertNotNull($this->order->confirmation_sent_at);
+    }
+
+    public function test_si_falla_la_comision_el_pago_igual_se_registra(): void
+    {
+        $this->app->instance(PaymentGateway::class, new class extends FakePaymentGateway
+        {
+            public function feeCents(string $paymentIntentId): ?int
+            {
+                throw new \RuntimeException('Stripe caído');
+            }
+        });
+
+        $this->sendEvent('checkout.session.completed', [])->assertOk();
+
+        $payment = $this->order->payments()->sole();
+        $this->assertSame(PaymentStatus::Completado, $payment->status);
+        $this->assertNull($payment->fee_cents);
+    }
+
+    public function test_sincroniza_comisiones_faltantes(): void
+    {
+        $this->gateway->fee = null;
+        $this->sendEvent('checkout.session.completed', [])->assertOk();
+        $this->assertNull($this->order->payments()->sole()->fee_cents);
+
+        $this->gateway->fee = 2500;
+        $this->artisan('stripe:sync-fees')->expectsOutput('Comisiones actualizadas: 1')->assertSuccessful();
+
+        $this->assertSame(2500, $this->order->payments()->sole()->fee_cents);
     }
 
     public function test_evento_repetido_se_procesa_una_vez(): void

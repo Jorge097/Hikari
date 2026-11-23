@@ -101,8 +101,25 @@ class StripeWebhookController extends Controller
             'amount_cents' => $session->amount_total,
             'stripe_payment_intent_id' => $session->payment_intent,
             'method' => $payment->method ?? $this->method($session->payment_intent),
+            'fee_cents' => $this->fee($session->payment_intent),
             'paid_at' => now(),
         ])->save();
+    }
+
+    // La comisión no debe frenar el pago: si falla, se sincroniza después
+    private function fee(?string $paymentIntentId): ?int
+    {
+        if (! $paymentIntentId) {
+            return null;
+        }
+
+        try {
+            return app(PaymentGateway::class)->feeCents($paymentIntentId);
+        } catch (\Throwable $e) {
+            Log::warning('Stripe: no se obtuvo la comisión', ['error' => class_basename($e)]);
+
+            return null;
+        }
     }
 
     private function markFailed(Payment $payment, bool $cancelOrder): void
