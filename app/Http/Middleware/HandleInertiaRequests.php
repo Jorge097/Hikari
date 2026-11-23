@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -34,7 +35,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'all_products' => \App\Models\Product::where('is_active', true)->select('id', 'name', 'slug', 'image')->get(),
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+            ],
+            'all_products' => Product::where('is_active', true)->select('id', 'name', 'slug', 'image')->get(),
         ];
     }
 }

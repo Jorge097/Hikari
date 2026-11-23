@@ -35,6 +35,22 @@ class Product extends Model
         return $this->category && $this->category->name === 'IsImperial';
     }
 
+    // Igual que ProductDetail.jsx: solo esta categoría elige tamaño
+    public function hasSizeOptions(): bool
+    {
+        return $this->category?->slug === 'Luminaria Imperial';
+    }
+
+    // Precio en centavos con el extra del tamaño elegido
+    public function unitPriceCents(?string $size): int
+    {
+        $extra = $this->hasSizeOptions()
+            ? (float) (Size::where('name', $size)->value('extra_price') ?? 0)
+            : 0;
+
+        return (int) round(((float) $this->price + $extra) * 100);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

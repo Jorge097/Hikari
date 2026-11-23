@@ -15,7 +15,7 @@ class Payment extends Model
 
     protected $fillable = [
         'type', 'provider', 'method', 'status', 'amount_cents', 'currency',
-        'reference', 'paid_at', 'notes',
+        'reference', 'stripe_payment_intent_id', 'paid_at', 'notes',
     ];
 
     protected $attributes = [

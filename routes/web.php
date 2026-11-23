@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PublicController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicController;
+use App\Http\Controllers\StripeWebhookController;
+use Illuminate\Support\Facades\Route;
 
 /* PÁGINAS PÚBLICAS */
 
@@ -22,18 +24,28 @@ Route::controller(PublicController::class)->group(function () {
     Route::get('/pedido', 'cart')
         ->name('cart');
 
-    Route::get('/Conocenos',  'conocenos')
+    Route::get('/Conocenos', 'conocenos')
         ->name('conocenos');
 
 });
 
+/* CHECKOUT Y PAGOS */
+
+Route::controller(CheckoutController::class)->group(function () {
+    Route::get('/checkout', 'show')->name('checkout');
+    Route::post('/checkout', 'store')->middleware('throttle:checkout')->name('checkout.store');
+    Route::get('/pedido/confirmado', 'success')->name('checkout.success');
+    Route::get('/pedido/cancelado', 'cancel')->name('checkout.cancel');
+});
+
+// Sin CSRF (ver bootstrap/app.php); se valida la firma
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 /* USUARIO AUTENTICADO */
 
 Route::get('/dashboard', [PublicController::class, 'dashboard'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-
 
 Route::middleware('auth')->group(function () {
 
@@ -48,6 +60,4 @@ Route::middleware('auth')->group(function () {
 
 });
 
-
-
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

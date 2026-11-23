@@ -6,12 +6,14 @@ use App\Enums\OrderOrigin;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
+use App\Mail\OrderConfirmation;
 use App\Services\FolioGenerator;
 use App\Services\OrderTotals;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Mail;
 
 class Order extends Model
 {
@@ -49,6 +51,7 @@ class Order extends Model
             'shipped_at' => 'datetime',
             'delivered_at' => 'datetime',
             'cancelled_at' => 'datetime',
+            'confirmation_sent_at' => 'datetime',
         ];
     }
 
@@ -122,9 +125,12 @@ class Order extends Model
         $refunded = $completed->where('type', PaymentType::Reembolso)->sum('amount_cents');
         $net = $paid->sum('amount_cents') - $refunded;
 
+        $justPaid = false;
+
         if ($this->status === OrderStatus::Pendiente && $this->total_cents > 0 && $net >= $this->total_cents) {
             $this->status = OrderStatus::Pagado;
             $this->paid_at = $paid->max('paid_at') ?? now();
+            $justPaid = true;
         } elseif ($refunded > 0 && $net <= 0 && $this->status !== OrderStatus::Cancelado) {
             $this->status = OrderStatus::Reembolsado;
         } elseif ($this->status === OrderStatus::Pagado && $refunded === 0 && $net < $this->total_cents) {
@@ -134,5 +140,23 @@ class Order extends Model
         }
 
         $this->save();
+
+        if ($justPaid) {
+            $this->sendConfirmation();
+        }
+    }
+
+    // Correo de confirmación, una sola vez por pedido
+    public function sendConfirmation(): void
+    {
+        $email = $this->customer?->email;
+
+        if (! $email || $this->confirmation_sent_at) {
+            return;
+        }
+
+        Mail::to($email)->queue(new OrderConfirmation($this));
+
+        $this->forceFill(['confirmation_sent_at' => now()])->saveQuietly();
     }
 }
