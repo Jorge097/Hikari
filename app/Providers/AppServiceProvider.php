@@ -38,8 +38,8 @@ class AppServiceProvider extends ServiceProvider
         // Máx. 5 solicitudes de factura por minuto por IP
         RateLimiter::for('invoice', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
 
-        // HTTPS en producción y al exponer el sitio con ngrok
-        if ($this->app->isProduction() || str_contains(request()->url(), 'ngrok')) {
+        // HTTPS en producción, staging y al exponer el sitio con ngrok
+        if ($this->app->environment('production', 'staging') || str_contains(request()->url(), 'ngrok')) {
             URL::forceScheme('https');
         }
     }

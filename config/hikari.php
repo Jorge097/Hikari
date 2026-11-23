@@ -33,6 +33,9 @@ return [
         'shipping_unit_code' => 'E48', // Unidad de servicio
     ],
 
+    // Hosting compartido sin worker: el scheduler procesa la cola cada minuto
+    'queue_via_scheduler' => (bool) env('HIKARI_QUEUE_VIA_SCHEDULER', false),
+
     // Folio: HK-001, HK-002... HK-1000
     'folio_prefix' => 'HK-',
     'folio_padding' => 3,
