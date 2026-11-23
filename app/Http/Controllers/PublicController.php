@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Scent;
 use App\Models\Size;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 class PublicController extends Controller
 {
-
     /* PÁGINA DE INICIO */
 
     public function home()
@@ -33,7 +32,7 @@ class PublicController extends Controller
                         ->whereNotNull('image')
                         ->limit(4)
                         ->select('id', 'category_id', 'image');
-                }
+                },
             ])
             ->get();
 
@@ -44,7 +43,6 @@ class PublicController extends Controller
             'categories' => $categories,
         ]);
     }
-
 
     /* DETALLE DE PRODUCTO */
 
@@ -82,7 +80,6 @@ class PublicController extends Controller
         ]);
     }
 
-
     /* CATEGORÍAS */
 
     public function categorias()
@@ -92,10 +89,9 @@ class PublicController extends Controller
             ->get();
 
         return Inertia::render('Categorias', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
-
 
     /* CATÁLOGO */
 
@@ -141,14 +137,12 @@ class PublicController extends Controller
         ]);
     }
 
-
     /* CARRITO */
 
     public function cart()
     {
         return Inertia::render('Cart');
     }
-
 
     /* DASHBOARD */
 
@@ -158,8 +152,7 @@ class PublicController extends Controller
     }
 
     public function conocenos()
-    {   
+    {
         return Inertia::render('Conocenos');
     }
-
 }

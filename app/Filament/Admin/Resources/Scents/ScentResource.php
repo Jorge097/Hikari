@@ -2,20 +2,20 @@
 
 namespace App\Filament\Admin\Resources\Scents;
 
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Admin\Resources\Scents\Pages\CreateScent;
 use App\Filament\Admin\Resources\Scents\Pages\EditScent;
 use App\Filament\Admin\Resources\Scents\Pages\ListScents;
 use App\Models\Scent;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use BackedEnum;
 
 class ScentResource extends Resource
 {
@@ -52,12 +52,12 @@ class ScentResource extends Resource
             ])
             // ... dentro de la función table
             ->actions([
-                \Filament\Actions\EditAction::make(),
-                \Filament\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

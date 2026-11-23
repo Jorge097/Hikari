@@ -2,13 +2,6 @@
 
 namespace App\Filament\Admin\Resources\Categories\RelationManagers;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle; 
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn; 
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -17,6 +10,13 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Table;
 
 class ProductsRelationManager extends RelationManager
 {
@@ -29,11 +29,11 @@ class ProductsRelationManager extends RelationManager
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                
+
                 // --- SWITCH EN EL FORMULARIO ---
                 Toggle::make('is_active')
-                    ->label('Producto Activo') 
-                    ->default(true) 
+                    ->label('Producto Activo')
+                    ->default(true)
                     ->required(),
             ]);
     }
@@ -47,11 +47,11 @@ class ProductsRelationManager extends RelationManager
                     ->searchable(),
 
                 // --- SWITCH EN LA TABLA ---
-             
+
                 ToggleColumn::make('is_active')
                     ->label('Disponibilidad')
-                    ->onColor('success') 
-                    ->offColor('danger'), 
+                    ->onColor('success')
+                    ->offColor('danger'),
             ])
             ->filters([
 

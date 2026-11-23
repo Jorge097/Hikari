@@ -31,10 +31,8 @@ class CategoriesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
 
-
-            ->reorderable('sort')   
+            ->reorderable('sort')
             ->defaultSort('sort')
-
 
             ->filters([
                 //

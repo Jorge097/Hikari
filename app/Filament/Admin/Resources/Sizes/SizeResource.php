@@ -6,12 +6,16 @@ use App\Filament\Admin\Resources\Sizes\Pages\CreateSize;
 use App\Filament\Admin\Resources\Sizes\Pages\EditSize;
 use App\Filament\Admin\Resources\Sizes\Pages\ListSizes;
 use App\Models\Size;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use BackedEnum;
 
 class SizeResource extends Resource
 {
@@ -29,7 +33,7 @@ class SizeResource extends Resource
                     ->required()
                     ->label('Tamaño / Medida')
                     ->placeholder('Ej. 250g, 500g, 10x10cm'),
-                
+
                 Forms\Components\TextInput::make('extra_price')
                     ->numeric()
                     ->prefix('$')
@@ -47,7 +51,7 @@ class SizeResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->label('Tamaño'),
-                
+
                 Tables\Columns\TextColumn::make('extra_price')
                     ->money('MXN')
                     ->label('Precio Extra'),
@@ -59,12 +63,12 @@ class SizeResource extends Resource
             ])
            // ... dentro de la función table
             ->actions([
-                \Filament\Actions\EditAction::make(),
-                \Filament\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
