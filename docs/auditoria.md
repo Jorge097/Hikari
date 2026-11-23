@@ -112,10 +112,13 @@ Solo los de Breeze (`tests/Feature/Auth`, `ProfileTest`, `ExampleTest`).
 
 ---
 
-## 5. Siguientes pasos propuestos (Fase 0 restante)
+## 5. Avance de Fase 0
 
-1. Quitar `@tailwindcss/vite` y `composer` de `package.json`; verificar `npm run build`.
-2. Decidir qué hacer con `public/index.php` (local vs. Neubox).
-3. Confirmar y limpiar el archivo `laravel`.
-4. Parche rápido de acceso al panel (cerrar registro o restringir `canAccessPanel`).
-5. Con eso, arrancar Fase 1 (modelo de pedidos/clientes/pagos y folio).
+- [x] Quitados `@tailwindcss/vite` y `composer` de `package.json` (se queda Tailwind v3). `npm run build` OK.
+- [x] `public/index.php` detecta la estructura: usa `../Hikari` si existe (Neubox) o `../` (local). También corrige la ruta de mantenimiento.
+- [x] Panel restringido: `canAccessPanel()` solo permite correos en `ADMIN_EMAILS` (`.env`). El registro público sigue abierto pero ya no da acceso al panel. Roles completos en Fase 4.
+- [x] `ExampleTest` usa `RefreshDatabase` (fallaba por falta de tablas). 25/25 tests pasan.
+- [ ] Archivo `laravel` (SQLite sin datos de negocio: solo migraciones y 5 sesiones). Pendiente borrarlo a mano.
+- [ ] Siguiente: Fase 1 (modelo de pedidos/clientes/pagos y folio).
+
+Variable nueva de `.env`: `ADMIN_EMAILS` (correos separados por coma). **Agregarla en Neubox antes del próximo deploy** o nadie podrá entrar al panel.
