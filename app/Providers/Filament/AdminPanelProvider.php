@@ -26,8 +26,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('panel_hikari')
             ->login()
-            ->brandLogo(asset('images/Logo.png'))
-            ->brandName('HIKARI')
+            ->brandLogo(fn () => view('filament.admin.brand'))
+            ->brandLogoHeight('2.25rem')
+            ->brandName('Hikari Candles And Co.')
             ->colors([
                 'primary' => Color::Amber,
             ])
