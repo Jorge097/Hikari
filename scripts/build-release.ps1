@@ -72,7 +72,9 @@ Get-ChildItem -Force $src | Where-Object { $skip -notcontains $_.Name } | ForEac
 Get-ChildItem "$app\bootstrap\cache" -Filter '*.php' | Remove-Item -Force
 
 if (Test-Path $zip) { Remove-Item $zip }
-Compress-Archive -Path "$out\*" -DestinationPath $zip
+# tar.exe escribe rutas con "/" (Compress-Archive usa "\" y rompe la extracción en Linux)
+tar.exe -a -c -f $zip -C $out Hikari public_html
+if ($LASTEXITCODE) { throw 'No se pudo crear el zip' }
 Remove-Item -Recurse -Force $work
 
 Write-Host "Paquete listo: $zip"
