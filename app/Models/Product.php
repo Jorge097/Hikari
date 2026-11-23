@@ -25,7 +25,6 @@ class Product extends Model
         'sort',
     ];
 
-
     public function sizes()
     {
         return $this->belongsToMany(Size::class)->withTimestamps();
@@ -41,7 +40,6 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
