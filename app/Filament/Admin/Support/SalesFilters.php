@@ -26,18 +26,28 @@ class SalesFilters
         return array_combine($years, $years);
     }
 
-    // Meses cerrados, del más reciente a enero 2025: ['2026-10' => 'Octubre 2026', ...]
+    // Meses cerrados agrupados por año (reciente primero), de Enero a Diciembre:
+    // ['2026' => ['2026-01' => 'Enero 2026', ...], '2025' => [...]]
     public static function closedPeriods(): array
     {
-        $periods = [];
-        $date = now()->startOfMonth()->subMonthNoOverflow();
+        $groups = [];
+        $last = now()->startOfMonth()->subMonthNoOverflow();
 
-        while ($date->year >= 2025) {
-            $periods[$date->format('Y-m')] = SalesReport::monthName($date->month).' '.$date->year;
-            $date = $date->subMonthNoOverflow();
+        for ($year = $last->year; $year >= 2025; $year--) {
+            $months = $year === $last->year ? $last->month : 12;
+
+            foreach (range(1, $months) as $month) {
+                $groups[(string) $year][sprintf('%d-%02d', $year, $month)] = SalesReport::monthName($month).' '.$year;
+            }
         }
 
-        return $periods;
+        return $groups;
+    }
+
+    // Claves de todos los meses cerrados
+    public static function closedPeriodKeys(): array
+    {
+        return array_keys(array_merge(...array_values(self::closedPeriods())));
     }
 
     // '2026-10' => [2026, 10]

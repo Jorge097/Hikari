@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\MonthlySalesReports\Pages\ListMonthlySalesRepor
 use App\Filament\Admin\Resources\MonthlySalesReports\Pages\ViewMonthlySalesReport;
 use App\Filament\Admin\Resources\MonthlySalesReports\RelationManagers\ItemsRelationManager;
 use App\Filament\Admin\Resources\Orders\Pages\ListOrders;
+use App\Filament\Admin\Support\SalesFilters;
 use App\Jobs\GenerateMonthlySalesReport;
 use App\Mail\MonthlySalesReportMail;
 use App\Models\Customer;
@@ -220,5 +221,21 @@ class MonthlySalesReportTest extends TestCase
         Livewire::test(ItemsRelationManager::class, ['ownerRecord' => $report, 'pageClass' => ViewMonthlySalesReport::class])
             ->assertCanSeeTableRecords($report->items)
             ->assertSee($nov->folio);
+    }
+
+    public function test_periodos_por_anio_y_de_enero_a_diciembre(): void
+    {
+        $this->travelTo(now()->setDate(2026, 3, 10));
+        $groups = SalesFilters::closedPeriods();
+
+        $this->assertSame(['2026', '2025'], array_map('strval', array_keys($groups)));
+        $this->assertSame(['2026-01' => 'Enero 2026', '2026-02' => 'Febrero 2026'], $groups['2026']);
+        $this->assertSame('Enero 2025', reset($groups[2025]));
+        $this->assertCount(12, $groups[2025]);
+        $this->assertSame('2026-02', max(SalesFilters::closedPeriodKeys()));
+
+        // En enero, el último mes cerrado es diciembre del año anterior
+        $this->travelTo(now()->setDate(2027, 1, 5));
+        $this->assertSame('2026-12', max(SalesFilters::closedPeriodKeys()));
     }
 }

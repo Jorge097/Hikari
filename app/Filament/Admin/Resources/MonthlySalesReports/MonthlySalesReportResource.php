@@ -75,7 +75,8 @@ class MonthlySalesReportResource extends Resource
                 TextColumn::make('generated_at')->label('Generado')->dateTime('d/m/Y H:i'),
                 TextColumn::make('emailed_at')->label('Enviado')->dateTime('d/m/Y H:i')->placeholder('—'),
             ])
-            ->defaultSort(fn ($query) => $query->orderByDesc('year')->orderByDesc('month'))
+            // Año más reciente primero; dentro del año, de Enero a Diciembre
+            ->defaultSort(fn ($query) => $query->orderByDesc('year')->orderBy('month'))
             ->recordActions([
                 ViewAction::make(),
                 self::downloadAction(),

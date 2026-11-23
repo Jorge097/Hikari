@@ -18,7 +18,7 @@ class ListMonthlySalesReports extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        $periods = SalesFilters::closedPeriods();
+        $keys = SalesFilters::closedPeriodKeys();
 
         return [
             // Abre cualquier mes cerrado; si no tiene reporte, lo genera
@@ -29,14 +29,14 @@ class ListMonthlySalesReports extends ListRecords
                 ->modalDescription('Solo meses ya cerrados. Si el mes no tiene reporte, se genera con los pagos registrados.')
                 ->modalSubmitActionLabel('Ver reporte')
                 ->schema([
-                    // Solo meses cerrados: "Octubre 2026", "Septiembre 2026", ...
+                    // Solo meses cerrados, por año y de Enero a Diciembre; por defecto el mes anterior
                     Select::make('period')
                         ->label('Periodo')
-                        ->options($periods)
-                        ->default(array_key_first($periods))
+                        ->options(SalesFilters::closedPeriods())
+                        ->default(max($keys))
                         ->searchable()
                         ->required()
-                        ->in(array_keys($periods))
+                        ->in($keys)
                         ->validationMessages(['in' => 'Ese mes aún no termina.']),
                     Toggle::make('send_email')
                         ->label('Enviar por correo')
