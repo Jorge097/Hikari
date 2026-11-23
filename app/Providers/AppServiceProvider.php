@@ -26,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
         // Máx. 10 intentos de checkout por minuto por IP
         RateLimiter::for('checkout', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
 
-        // HTTPS al exponer el sitio con ngrok
-        if (str_contains(request()->url(), 'ngrok')) {
+        // HTTPS en producción y al exponer el sitio con ngrok
+        if ($this->app->isProduction() || str_contains(request()->url(), 'ngrok')) {
             URL::forceScheme('https');
         }
     }

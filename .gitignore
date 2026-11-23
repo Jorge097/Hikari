@@ -22,3 +22,9 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# CSD/FIEL y llaves: nunca versionar
+*.cer
+*.key
+*.pfx
+*.pem
