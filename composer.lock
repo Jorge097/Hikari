@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4b5b1f045463009190e7145011d3fc7",
+    "content-hash": "11b0fb423d807c52d92193a2fe540e56",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -4346,7 +4346,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-30T13:51:11+00:00"
+            "time": "2025-01-30T13:51:11+00:00",
+            "published-time": "2025-01-30T13:51:35+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -11179,5 +11180,8 @@
         "php": "^8.2"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.2.12"
+    },
     "plugin-api-version": "2.11.0"
 }
