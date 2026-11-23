@@ -11,6 +11,7 @@ class MonthlySalesReport extends Model
     protected $fillable = [
         'year', 'month', 'orders_count',
         'subtotal_mxn_cents', 'tax_mxn_cents', 'shipping_mxn_cents', 'total_mxn_cents',
+        'refunds_mxn_cents', 'fees_mxn_cents',
         'file_path', 'generated_at', 'emailed_at',
     ];
 
@@ -24,6 +25,8 @@ class MonthlySalesReport extends Model
             'tax_mxn_cents' => 'integer',
             'shipping_mxn_cents' => 'integer',
             'total_mxn_cents' => 'integer',
+            'refunds_mxn_cents' => 'integer',
+            'fees_mxn_cents' => 'integer',
             'generated_at' => 'datetime',
             'emailed_at' => 'datetime',
         ];
@@ -32,6 +35,12 @@ class MonthlySalesReport extends Model
     public function items(): HasMany
     {
         return $this->hasMany(MonthlySalesReportItem::class);
+    }
+
+    // Lo que queda después de reembolsos y comisiones
+    public function netMxnCents(): int
+    {
+        return $this->total_mxn_cents - $this->refunds_mxn_cents - $this->fees_mxn_cents;
     }
 
     // "Noviembre 2026"

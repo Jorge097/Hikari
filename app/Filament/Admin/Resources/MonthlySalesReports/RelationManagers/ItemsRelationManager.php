@@ -28,6 +28,7 @@ class ItemsRelationManager extends RelationManager
                 $money('shipping_cents', 'Envío'),
                 $money('total_cents', 'Total'),
                 TextColumn::make('total_mxn_cents')->label('Total MXN')->money('MXN', divideBy: 100),
+                TextColumn::make('fee_cents')->label('Comisión Stripe')->money('MXN', divideBy: 100)->placeholder('—'),
                 TextColumn::make('payment_method')->label('Método')->placeholder('—'),
                 TextColumn::make('status')->label('Estado')->badge(),
                 TextColumn::make('stripe_payment_id')->label('Stripe')->placeholder('—')->toggleable(isToggledHiddenByDefault: true),

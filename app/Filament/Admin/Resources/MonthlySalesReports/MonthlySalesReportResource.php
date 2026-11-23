@@ -10,8 +10,11 @@ use App\Models\MonthlySalesReport;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -41,6 +44,33 @@ class MonthlySalesReportResource extends Resource
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    // Resumen arriba de la lista de pedidos del mes
+    public static function infolist(Schema $schema): Schema
+    {
+        $mxn = fn (string $name, string $label) => TextEntry::make($name)->label($label)->money('MXN', divideBy: 100);
+
+        return $schema->components([
+            Section::make('Resumen del mes')
+                ->columns(4)
+                ->columnSpanFull()
+                ->schema([
+                    TextEntry::make('orders_count')->label('Pedidos pagados'),
+                    $mxn('subtotal_mxn_cents', 'Subtotal'),
+                    $mxn('tax_mxn_cents', 'IVA'),
+                    $mxn('shipping_mxn_cents', 'Envío'),
+                    $mxn('total_mxn_cents', 'Total vendido')->weight('bold'),
+                    $mxn('refunds_mxn_cents', 'Reembolsos del mes')->color('danger'),
+                    $mxn('fees_mxn_cents', 'Comisiones de Stripe')->color('warning'),
+                    TextEntry::make('net')
+                        ->label('Neto')
+                        ->state(fn (MonthlySalesReport $record) => $record->netMxnCents())
+                        ->money('MXN', divideBy: 100)
+                        ->weight('bold')
+                        ->color('success'),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -77,6 +107,14 @@ class MonthlySalesReportResource extends Resource
                 $mxn('tax_mxn_cents', 'IVA'),
                 $mxn('shipping_mxn_cents', 'Envío'),
                 $mxn('total_mxn_cents', 'Total')->weight('bold'),
+                $mxn('refunds_mxn_cents', 'Reembolsos')->color('danger'),
+                $mxn('fees_mxn_cents', 'Comisiones')->color('warning'),
+                TextColumn::make('net')
+                    ->label('Neto')
+                    ->state(fn (MonthlySalesReport $record) => $record->netMxnCents())
+                    ->money('MXN', divideBy: 100)
+                    ->weight('bold')
+                    ->color('success'),
                 TextColumn::make('generated_at')->label('Generado')->dateTime('d/m/Y H:i'),
                 TextColumn::make('emailed_at')->label('Enviado')->dateTime('d/m/Y H:i')->placeholder('—'),
             ])

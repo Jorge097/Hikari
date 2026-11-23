@@ -35,11 +35,12 @@ class GenerateMonthlySalesReport implements ShouldBeUnique, ShouldQueue
     {
         [$from, $to] = SalesReport::monthRange($this->year, $this->month);
         $rows = SalesReport::rows(SalesReport::paidBetween($from, $to));
+        $refunds = SalesReport::refunds($from, $to);
 
         $mxn = fn (string $key) => (int) $rows->sum(fn ($row) => round($row[$key] * ($row['exchange_rate'] ?? 1)));
 
         // Idempotente: reemplaza el snapshot del mes
-        $report = DB::transaction(function () use ($rows, $mxn) {
+        $report = DB::transaction(function () use ($rows, $refunds, $mxn) {
             $report = MonthlySalesReport::updateOrCreate(
                 ['year' => $this->year, 'month' => $this->month],
                 [
@@ -48,6 +49,8 @@ class GenerateMonthlySalesReport implements ShouldBeUnique, ShouldQueue
                     'tax_mxn_cents' => $mxn('tax_cents'),
                     'shipping_mxn_cents' => $mxn('shipping_cents'),
                     'total_mxn_cents' => $rows->sum('total_mxn_cents'),
+                    'refunds_mxn_cents' => (int) $refunds->sum('amount_mxn_cents'),
+                    'fees_mxn_cents' => (int) $rows->sum('fee_cents'),
                     'generated_at' => now(),
                 ],
             );
@@ -61,7 +64,7 @@ class GenerateMonthlySalesReport implements ShouldBeUnique, ShouldQueue
         // Archivo XLSX en storage/app/private/reports
         $path = 'reports/'.$report->fileName();
         Storage::disk('local')->makeDirectory('reports');
-        SpreadsheetWriter::write($rows, Storage::disk('local')->path($path));
+        SpreadsheetWriter::writeMonthly($report, $rows, $refunds, Storage::disk('local')->path($path));
         $report->update(['file_path' => $path]);
 
         $recipients = config('hikari.report_emails');

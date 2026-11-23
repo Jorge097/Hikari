@@ -21,6 +21,7 @@ class MonthlySalesReportItem extends Model
             'shipping_cents' => 'integer',
             'total_cents' => 'integer',
             'total_mxn_cents' => 'integer',
+            'fee_cents' => 'integer',
         ];
     }
 

@@ -97,16 +97,7 @@ class MonthlySalesReportTest extends TestCase
 
         Storage::disk('local')->assertExists('reports/ventas-2026-11.xlsx');
 
-        // Lee el XLSX generado
-        $reader = new Reader;
-        $reader->open(Storage::disk('local')->path('reports/ventas-2026-11.xlsx'));
-        $rows = [];
-        foreach ($reader->getSheetIterator() as $sheet) {
-            foreach ($sheet->getRowIterator() as $row) {
-                $rows[] = $row->toArray();
-            }
-        }
-        $reader->close();
+        $rows = $this->sheet('reports/ventas-2026-11.xlsx', 'Ventas');
 
         $this->assertSame(array_values(SalesReport::HEADERS), $rows[0]);
         $this->assertSame('HK-001', $rows[1][0]);
@@ -237,5 +228,63 @@ class MonthlySalesReportTest extends TestCase
         // En enero, el último mes cerrado es diciembre del año anterior
         $this->travelTo(now()->setDate(2027, 1, 5));
         $this->assertSame('2026-12', max(SalesFilters::closedPeriodKeys()));
+    }
+
+    // Filas de una hoja del XLSX generado
+    private function sheet(string $path, string $name): array
+    {
+        $reader = new Reader;
+        $reader->open(Storage::disk('local')->path($path));
+        $rows = [];
+        foreach ($reader->getSheetIterator() as $sheet) {
+            if ($sheet->getName() === $name) {
+                foreach ($sheet->getRowIterator() as $row) {
+                    $rows[] = $row->toArray();
+                }
+            }
+        }
+        $reader->close();
+
+        return $rows;
+    }
+
+    public function test_reembolsos_y_comisiones_del_mes(): void
+    {
+        $nov = $this->paidOrder('2026-11-05 10:00:00', 50000);
+        $nov->payments()->first()->update(['provider' => 'stripe', 'method' => 'tarjeta', 'fee_cents' => 2140]);
+        $oct = $this->paidOrder('2026-10-20 10:00:00', 30000);
+
+        // Reembolso en noviembre de una venta de octubre
+        $oct->payments()->create([
+            'type' => 'reembolso', 'method' => 'transferencia', 'status' => PaymentStatus::Completado,
+            'amount_cents' => 30000, 'paid_at' => Carbon::parse('2026-11-12 09:00', 'America/Mexico_City'),
+            'notes' => 'Llegó rota',
+        ]);
+
+        GenerateMonthlySalesReport::dispatchSync(2026, 11, sendEmail: false);
+        $report = MonthlySalesReport::sole();
+
+        $this->assertSame(50000, $report->total_mxn_cents);
+        $this->assertSame(30000, $report->refunds_mxn_cents);
+        $this->assertSame(2140, $report->fees_mxn_cents);
+        $this->assertSame(50000 - 30000 - 2140, $report->netMxnCents());
+        $this->assertSame(2140, $report->items()->sole()->fee_cents);
+
+        $ventas = $this->sheet('reports/ventas-2026-11.xlsx', 'Ventas');
+        $this->assertEquals(21.40, end($ventas[1]));
+
+        $reembolsos = $this->sheet('reports/ventas-2026-11.xlsx', 'Reembolsos');
+        $this->assertSame($oct->folio, $reembolsos[1][0]);
+        $this->assertEquals(300, $reembolsos[1][3]);
+        $this->assertSame('Llegó rota', $reembolsos[1][5]);
+
+        $resumen = collect($this->sheet('reports/ventas-2026-11.xlsx', 'Resumen'))->filter(fn ($row) => count($row) === 2)->mapWithKeys(fn ($row) => [$row[0] => $row[1]]);
+        $this->assertEquals(500, $resumen['Total vendido']);
+        $this->assertEquals(178.60, $resumen['Neto']);
+
+        $this->get('/panel_hikari/monthly-sales-reports')->assertRedirect(); // sin sesión
+        $mail = (new MonthlySalesReportMail($report))->render();
+        $this->assertStringContainsString('Comisiones de Stripe', $mail);
+        $this->assertStringContainsString('$178.60 MXN', $mail);
     }
 }

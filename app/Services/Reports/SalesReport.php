@@ -6,6 +6,7 @@ use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Models\Order;
+use App\Models\Payment;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -30,7 +31,10 @@ class SalesReport
         'origin' => 'Origen',
         'stripe_payment_id' => 'ID de pago Stripe',
         'cfdi_uuid' => 'UUID CFDI',
+        'fee' => 'Comisión Stripe',
     ];
+
+    public const REFUND_HEADERS = ['Folio', 'Fecha del reembolso', 'Cliente', 'Monto MXN', 'Método', 'Motivo', 'UUID CFDI'];
 
     // "Noviembre"
     public static function monthName(int $month): string
@@ -79,6 +83,12 @@ class SalesReport
 
         $rate = $order->currency === 'MXN' ? 1 : (float) $order->exchange_rate;
 
+        // Comisión de Stripe del pago (ya en MXN)
+        $fees = $order->payments
+            ->where('type', PaymentType::Pago)
+            ->where('status', PaymentStatus::Completado)
+            ->whereNotNull('fee_cents');
+
         // Factura de ingreso timbrada (si la hay)
         $invoice = $order->invoices
             ->where('type', 'I')
@@ -104,7 +114,39 @@ class SalesReport
             'origin' => $order->origin->getLabel(),
             'stripe_payment_id' => $payment?->stripe_payment_intent_id,
             'cfdi_uuid' => $invoice?->uuid,
+            'fee_cents' => $fees->isEmpty() ? null : (int) $fees->sum('fee_cents'),
         ];
+    }
+
+    /**
+     * Reembolsos hechos en el periodo (por fecha del reembolso), en MXN.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public static function refunds(CarbonImmutable $from, CarbonImmutable $to): Collection
+    {
+        return Payment::query()
+            ->with(['order.customer', 'order.invoices'])
+            ->where('type', PaymentType::Reembolso)
+            ->where('status', PaymentStatus::Completado)
+            ->whereBetween('paid_at', [$from, $to])
+            ->orderBy('paid_at')
+            ->get()
+            ->map(function (Payment $refund) {
+                $order = $refund->order;
+                $rate = $refund->currency === 'MXN' ? 1 : (float) $order->exchange_rate;
+                $invoice = $order->invoices->where('type', 'I')->where('status', InvoiceStatus::Timbrada)->sortByDesc('id')->first();
+
+                return [
+                    'folio' => $order->folio,
+                    'paid_at' => $refund->paid_at,
+                    'customer_name' => $order->customer?->name,
+                    'amount_mxn_cents' => (int) round($refund->amount_cents * $rate),
+                    'method' => $refund->method?->getLabel(),
+                    'notes' => $refund->notes,
+                    'cfdi_uuid' => $invoice?->uuid,
+                ];
+            });
     }
 
     /**
@@ -133,6 +175,7 @@ class SalesReport
             $row['origin'],
             $row['stripe_payment_id'],
             $row['cfdi_uuid'],
+            $money($row['fee_cents'] ?? null),
         ];
     }
 }
