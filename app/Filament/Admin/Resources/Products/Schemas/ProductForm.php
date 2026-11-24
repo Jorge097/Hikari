@@ -28,19 +28,25 @@ class ProductForm
                     ->label('Clave')
                     ->required(),
                 Textarea::make('description')
-                    ->label('Descripcion')
+                    ->label('Descripción')
                     ->required()
                     ->columnSpanFull(),
                 TextInput::make('price')
                     ->label('Precio')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('$')
+                    ->suffix('MXN'),
                 TextInput::make('size')
                     ->label('Tamaño'),
-                Toggle::make('is_seasonal')
+                Toggle::make('is_active')
                     ->label('Activo')
-                    ->required(),
+                    ->helperText('Si está apagado, no aparece en la tienda.')
+                    ->default(true),
+                // is_seasonal = sale en "destacados" del inicio
+                Toggle::make('is_seasonal')
+                    ->label('Destacado en inicio')
+                    ->default(false),
                 FileUpload::make('image')
                     ->label('Imagen')
                     ->image()

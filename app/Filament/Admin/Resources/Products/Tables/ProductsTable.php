@@ -30,22 +30,28 @@ class ProductsTable
                     ->searchable(),
                 TextColumn::make('price')
                     ->label('Precio')
-                    ->money()
+                    ->money('MXN')
                     ->sortable(),
                 TextColumn::make('size')
                     ->label('Tamaño')
                     ->searchable(),
-                IconColumn::make('is_seasonal')
+                IconColumn::make('is_active')
                     ->label('Activo')
                     ->boolean(),
+                IconColumn::make('is_seasonal')
+                    ->label('Destacado')
+                    ->boolean()
+                    ->toggleable(),
                 ImageColumn::make('image')
                     ->label('Imagen'),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Actualizado')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 

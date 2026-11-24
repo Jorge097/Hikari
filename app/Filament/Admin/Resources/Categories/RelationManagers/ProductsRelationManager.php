@@ -22,11 +22,18 @@ class ProductsRelationManager extends RelationManager
 {
     protected static string $relationship = 'products';
 
+    protected static ?string $title = 'Productos';
+
+    protected static ?string $modelLabel = 'producto';
+
+    protected static ?string $pluralModelLabel = 'productos';
+
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nombre')
                     ->required()
                     ->maxLength(255),
 
@@ -44,6 +51,7 @@ class ProductsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nombre')
                     ->searchable(),
 
                 // --- SWITCH EN LA TABLA ---

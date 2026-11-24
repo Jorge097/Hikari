@@ -16,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ScentResource extends Resource
 {
@@ -24,6 +25,14 @@ class ScentResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-sparkles';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Catálogo';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $modelLabel = 'aroma';
+
+    protected static ?string $pluralModelLabel = 'aromas';
 
     public static function form(Schema $schema): Schema
     {
@@ -46,7 +55,7 @@ class ScentResource extends Resource
                     ->sortable()
                     ->label('Aroma'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('d/m/Y H:i')
                     ->label('Creado el')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

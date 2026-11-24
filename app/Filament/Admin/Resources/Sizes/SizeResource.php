@@ -16,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class SizeResource extends Resource
 {
@@ -24,6 +25,14 @@ class SizeResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrows-pointing-out';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Catálogo';
+
+    protected static ?int $navigationSort = 4;
+
+    protected static ?string $modelLabel = 'tamaño';
+
+    protected static ?string $pluralModelLabel = 'tamaños';
 
     public static function form(Schema $schema): Schema
     {
@@ -57,7 +66,7 @@ class SizeResource extends Resource
                     ->label('Precio Extra'),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('d/m/Y H:i')
                     ->label('Creado el')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

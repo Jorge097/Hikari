@@ -13,20 +13,21 @@ class CategoryForm
     {
         return $schema
             ->components([
-
                 TextInput::make('name')
+                    ->label('Nombre')
                     ->required(),
 
                 TextInput::make('slug')
+                    ->label('Clave')
                     ->required(),
 
                 Textarea::make('description')
-                    ->label('Descripcion')
+                    ->label('Descripción')
                     ->columnSpanFull(),
 
                 Toggle::make('is_active')
+                    ->label('Activa')
                     ->required(),
-
             ]);
     }
 }

@@ -25,6 +25,11 @@ class Product extends Model
         'sort',
     ];
 
+    protected $casts = [
+        'is_seasonal' => 'boolean',
+        'is_active' => 'boolean',
+    ];
+
     public function sizes()
     {
         return $this->belongsToMany(Size::class)->withTimestamps();

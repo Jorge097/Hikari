@@ -13,7 +13,7 @@ class Dashboard extends BaseDashboard
 {
     use HasFiltersForm;
 
-    protected static ?string $title = 'Dashboard';
+    protected static ?string $title = 'Inicio';
 
     public function filtersForm(Schema $schema): Schema
     {

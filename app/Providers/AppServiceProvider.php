@@ -6,6 +6,8 @@ use App\Services\Invoicing\FacturamaProvider;
 use App\Services\Invoicing\InvoiceProvider;
 use App\Services\Payments\PaymentGateway;
 use App\Services\Payments\StripeGateway;
+use Filament\Schemas\Schema;
+use Filament\Tables\Table;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -32,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Panel: pesos con formato mexicano ($1,234.50)
+        Table::configureUsing(fn (Table $table) => $table->defaultCurrency('MXN')->defaultNumberLocale('es_MX'));
+        Schema::configureUsing(fn (Schema $schema) => $schema->defaultCurrency('MXN')->defaultNumberLocale('es_MX'));
+
         // Máx. 10 intentos de checkout por minuto por IP
         RateLimiter::for('checkout', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
 
