@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -15,7 +17,7 @@ class Product extends Model
         'slug',
         'description',
         'price',
-        'stock',
+        'tracks_stock',
         'aroma',
         'size',
         'presentation',
@@ -28,7 +30,53 @@ class Product extends Model
     protected $casts = [
         'is_seasonal' => 'boolean',
         'is_active' => 'boolean',
+        'tracks_stock' => 'boolean',
     ];
+
+    protected $attributes = [
+        'tracks_stock' => true,
+    ];
+
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class);
+    }
+
+    // Suma de existencias en sucursales activas (subconsulta)
+    public static function availableStockQuery(): Builder
+    {
+        return Stock::query()
+            ->selectRaw('coalesce(sum(quantity), 0)')
+            ->whereColumn('stocks.product_id', 'products.id')
+            // La relación incluye borradas; aquí se excluyen
+            ->whereHas('branch', fn (Builder $query) => $query->where('is_active', true)->whereNull('deleted_at'));
+    }
+
+    public function scopeWithAvailableStock(Builder $query): Builder
+    {
+        if ($query->getQuery()->columns === null) {
+            $query->select('products.*');
+        }
+
+        return $query->addSelect(['stock_available' => self::availableStockQuery()]);
+    }
+
+    // Lleva inventario y quedan menos del umbral (incluye agotados)
+    public function scopeLowStock(Builder $query): Builder
+    {
+        return $query->where('tracks_stock', true)
+            ->where(self::availableStockQuery(), '<', config('inventory.low_stock_threshold'));
+    }
+
+    public function scopeOutOfStock(Builder $query): Builder
+    {
+        return $query->where('tracks_stock', true)->where(self::availableStockQuery(), '<=', 0);
+    }
+
+    public function availableStock(): int
+    {
+        return (int) self::query()->whereKey($this->getKey())->withAvailableStock()->value('stock_available');
+    }
 
     public function sizes()
     {

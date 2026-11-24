@@ -43,6 +43,10 @@ class ProductForm
                     ->label('Activo')
                     ->helperText('Si está apagado, no aparece en la tienda.')
                     ->default(true),
+                Toggle::make('tracks_stock')
+                    ->label('Lleva inventario')
+                    ->helperText('Apágalo en productos bajo pedido o personalizados.')
+                    ->default(true),
                 // is_seasonal = sale en "destacados" del inicio
                 Toggle::make('is_seasonal')
                     ->label('Destacado en inicio')
